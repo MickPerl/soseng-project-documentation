@@ -153,11 +153,6 @@ paths:
           description: OK
     parameters: []
   /token:
-    get:
-      summary: Your GET endpoint
-      tags: []
-      responses: {}
-      operationId: get-token
     post:
       summary: ''
       operationId: post-token
