@@ -152,6 +152,58 @@ paths:
         '200':
           description: OK
     parameters: []
+    get:
+      summary: get message
+      operationId: get-message
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: messageId
+          description: Id del messaggio da leggere
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                messageId:
+                  type: integer
+                sender:
+                  type: string
+                body:
+                  type: string
+                receiver:
+                  type: string
+                date:
+                  type: string
+                  description: Data di invio del messaggio (giorno e ora)
+            examples:
+              example-100:
+                value:
+                  messageId: 100
+                  sender: acmesky
+                  body: 'C''è una nuova offerta: bologna - milano il 17/08/2021. Codice offerta: 1234'
+                  receiver: Mario Rossi
+                  date: '20/02/2021, 10:04 CET'
+          application/xml:
+            schema:
+              type: object
+              properties: {}
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                '':
+                  type: string
+        description: Leggi un messaggio con un certo ID
   /token:
     post:
       summary: ''
