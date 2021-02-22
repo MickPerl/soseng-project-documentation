@@ -3,7 +3,7 @@ info:
   title: prontogram
   version: '1.0'
 servers:
-  - url: 'http://localhost:3000'
+  - url: 'https://soseng-unibo.stoplight.io/mocks/soseng-unibo/soseng-project-documentation/6636887'
     description: testing
 paths:
   /message:
@@ -174,8 +174,8 @@ paths:
               type: object
               properties:
                 username:
-                  type: string
                   minLength: 1
+                  type: string
                 password:
                   type: string
                   minLength: 1
@@ -203,6 +203,7 @@ paths:
               properties: {}
         description: Invia nome utente e password
       description: Richiedi token di autenticazione
+      parameters: []
 components:
   schemas: {}
   securitySchemes: {}
