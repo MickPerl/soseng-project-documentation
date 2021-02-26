@@ -8,7 +8,7 @@ servers:
 paths:
   /distance:
     post:
-      summary: ''
+      summary: Calcola distanza
       operationId: post-distance
       responses:
         '200':
