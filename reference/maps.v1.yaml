@@ -93,6 +93,7 @@ paths:
           in: header
           name: Content-Type
           description: application/json
+          required: true
       security:
         - authorization: []
 components:
