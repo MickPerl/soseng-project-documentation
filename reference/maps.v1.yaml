@@ -82,8 +82,17 @@ paths:
                   pointA: 'Via del corso, 1, 12345, Roma, Italia'
                   pointsB:
                     - 'Via Garibaldi, 1, 12345, Roma'
+          application/xhtml+xml:
+            schema:
+              type: object
+              properties: {}
         description: 'Specifica un punto di partenza e uno di arrivo, oppure un punto di partenza e una lista di punti di arrivo'
-      parameters: []
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: Content-Type
+          description: application/json
       security:
         - authorization: []
 components:
