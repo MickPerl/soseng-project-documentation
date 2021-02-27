@@ -7,30 +7,69 @@
     {
       "type": "item",
       "title": "Descrizione del dominio e del problema",
-      "uri": "reference/maps.v1.yaml"
+      "uri": "docs/1-descrizione-dominio-problema.md"
     },
     {
       "type": "item",
       "title": "Workflow e artefatti",
-      "uri": "reference/maps.v1.yaml"
+      "uri": "docs/2-workflow-artefatti.md"
     },
     {
       "type": "divider",
       "title": "Modellazione"
     },
     {
-      "type": "divider",
-      "title": "APIS"
+      "type": "item",
+      "title": "Coreografie",
+      "uri": "docs/2-workflow-artefatti.md"
     },
     {
       "type": "item",
-      "title": "Maps",
-      "uri": "reference/maps.v1.yaml"
+      "title": "Diagramma BPMN",
+      "uri": "docs/2-workflow-artefatti.md"
     },
     {
       "type": "item",
-      "title": "Prontogram",
-      "uri": "reference/prontogram.v1.yaml"
+      "title": "Modello UML (TinySOA)",
+      "uri": "docs/2-workflow-artefatti.md"
+    },
+    {
+      "type": "group",
+      "title": "Interfacce",
+      "items": [
+        {
+          "type": "group",
+          "title": "RESTful API",
+          "items": [
+            {
+              "type": "item",
+              "title": "Maps",
+              "uri": "reference/maps.v1.yaml"
+            },
+            {
+              "type": "item",
+              "title": "Prontogram",
+              "uri": "reference/prontogram.v1.yaml"
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "title": "WSDL",
+          "items": [
+            {
+              "type": "item",
+              "title": "Compagnia-trasporto",
+              "uri": "docs/2-workflow-artefatti.md"
+            },
+            {
+              "type": "item",
+              "title": "Altro",
+              "uri": "docs/2-workflow-artefatti.md"
+            }
+          ]
+        }
+      ]
     },    
     {
       "type": "divider",
