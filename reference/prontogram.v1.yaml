@@ -7,70 +7,56 @@ servers:
     description: testing
 paths:
   /message:
+    parameters: []
     post:
-      summary: ''
+      summary: get message
       operationId: post-message
       responses:
-        '201':
-          description: Created
-        '403':
-          description: Forbidden
-      description: Invia un messaggio
-      requestBody:
-        content:
-          application/json:
-            schema:
-              description: ''
-              type: object
-              properties:
-                token:
-                  type: string
-                  minLength: 1
-                receiver:
-                  type: string
-                  minLength: 1
-                body:
-                  type: string
-                  minLength: 1
-              required:
-                - token
-                - receiver
-                - body
-            examples:
-              example-1:
-                value:
-                  token: '1234'
-                  receiver: Mario rossi
-                  body: 'Nuova offerta. Codice: 1234'
-        description: 'È richiesto un token di autenticazione, un destinatario e il corpo del testo'
-    parameters: []
-    get:
-      summary: get message
-      operationId: get-message
-      responses:
-        '200':
-          description: OK
+        '401':
+          description: Unauthorized
+          headers: {}
           content:
             application/json:
               schema:
                 type: object
+                properties: {}
+        '404':
+          description: Not Found
+        '406':
+          description: Not Acceptable
+        '415':
+          description: Unsupported Media Type
+          content:
+            application/vnd.api+json:
+              schema:
+                type: object
                 properties:
-                  messageId:
-                    type: array
-                    items:
-                      type: integer
-                  sender:
-                    type: string
-                    nullable: true
-                  body:
-                    type: string
-                    nullable: true
-                  receiver:
-                    type: string
-                  date:
-                    type: string
-                    nullable: true
-                    description: Data di invio del messaggio (giorno e ora)
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                      next:
+                        type: string
+                      previous:
+                        type: string
+                  data:
+                    type: object
+                    properties:
+                      body:
+                        type: string
+                        nullable: true
+                  meta:
+                    type: object
+                    properties:
+                      date:
+                        type: string
+                      sender:
+                        type: string
+                      receiver:
+                        type: string
+                      messageId:
+                        type: integer
               examples:
                 /message?messageId=100:
                   value:
@@ -91,16 +77,6 @@ paths:
                     body: null
                     receiver: Mario Rossi
                     date: null
-        '401':
-          description: Unauthorized
-          headers: {}
-          content:
-            application/json:
-              schema:
-                type: object
-                properties: {}
-        '404':
-          description: Not Found
       parameters:
         - schema:
             type: string
@@ -150,38 +126,61 @@ paths:
         '200':
           description: OK
           content:
-            application/json:
+            application/vnd.api+json:
               schema:
                 description: ''
                 type: object
                 properties:
-                  token:
-                    type: string
-                    minLength: 1
-                  expiration-date:
-                    type: string
-                    minLength: 1
+                  data:
+                    type: object
+                    required:
+                      - token
+                    properties:
+                      token:
+                        type: string
+                        minLength: 1
+                  meta:
+                    type: object
+                    required:
+                      - expiration-date
+                    properties:
+                      expiration-date:
+                        minLength: 1
+                        type: string
                 required:
-                  - token
-                  - expiration-date
+                  - data
+                  - meta
+            application/xml:
+              schema:
+                type: object
+                properties: {}
         '400':
           description: Bad Request
+        '406':
+          description: Not Acceptable
+        '415':
+          description: Unsupported Media Type
       requestBody:
         content:
-          application/json:
+          application/vnd.api+json:
             schema:
               description: ''
               type: object
               properties:
-                username:
-                  minLength: 1
-                  type: string
-                password:
-                  type: string
-                  minLength: 1
+                data:
+                  type: object
+                  properties:
+                    username:
+                      type: string
+                      minLength: 1
+                    password:
+                      type: string
+                      minLength: 1
+                  required:
+                    - username
+                    - password
               required:
-                - username
-                - password
+                - data
           application/xml:
             schema:
               description: ''
@@ -203,7 +202,68 @@ paths:
               properties: {}
         description: Invia nome utente e password
       description: Richiedi token di autenticazione
-      parameters: []
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: Content-Type
+          description: application/vnd.api+json
+          required: true
+  /allmessage:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  token:
+                    type: string
+                    minLength: 1
+                  expiration-date:
+                    type: string
+                    minLength: 1
+                required:
+                  - token
+                  - expiration-date
+            application/xml:
+              schema:
+                type: object
+                properties: {}
+      operationId: get-allmessage
+      description: Ottieni tutti i messaggi in blocchi da n messaggi.
+  /createmessage:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  token:
+                    type: string
+                    minLength: 1
+                  expiration-date:
+                    type: string
+                    minLength: 1
+                required:
+                  - token
+                  - expiration-date
+            application/xml:
+              schema:
+                type: object
+                properties: {}
+      operationId: get-createmessage
 components:
   schemas: {}
   securitySchemes: {}
