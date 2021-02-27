@@ -12,8 +12,20 @@ paths:
       summary: get message
       operationId: post-message
       responses:
-        '200':
-          description: OK
+        '401':
+          description: Unauthorized
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        '404':
+          description: Not Found
+        '406':
+          description: Not Acceptable
+        '415':
+          description: Unsupported Media Type
           content:
             application/vnd.api+json:
               schema:
@@ -65,16 +77,6 @@ paths:
                     body: null
                     receiver: Mario Rossi
                     date: null
-        '401':
-          description: Unauthorized
-          headers: {}
-          content:
-            application/json:
-              schema:
-                type: object
-                properties: {}
-        '404':
-          description: Not Found
       parameters:
         - schema:
             type: string
@@ -124,26 +126,40 @@ paths:
         '200':
           description: OK
           content:
-            application/json:
+            application/vnd.api+json:
               schema:
                 description: ''
                 type: object
                 properties:
-                  token:
-                    type: string
-                    minLength: 1
-                  expiration-date:
-                    type: string
-                    minLength: 1
+                  data:
+                    type: object
+                    required:
+                      - token
+                    properties:
+                      token:
+                        type: string
+                        minLength: 1
+                  meta:
+                    type: object
+                    required:
+                      - expiration-date
+                    properties:
+                      expiration-date:
+                        minLength: 1
+                        type: string
                 required:
-                  - token
-                  - expiration-date
+                  - data
+                  - meta
             application/xml:
               schema:
                 type: object
                 properties: {}
         '400':
           description: Bad Request
+        '406':
+          description: Not Acceptable
+        '415':
+          description: Unsupported Media Type
       requestBody:
         content:
           application/vnd.api+json:
@@ -151,15 +167,20 @@ paths:
               description: ''
               type: object
               properties:
-                username:
-                  minLength: 1
-                  type: string
-                password:
-                  type: string
-                  minLength: 1
+                data:
+                  type: object
+                  properties:
+                    username:
+                      type: string
+                      minLength: 1
+                    password:
+                      type: string
+                      minLength: 1
+                  required:
+                    - username
+                    - password
               required:
-                - username
-                - password
+                - data
           application/xml:
             schema:
               description: ''
@@ -181,12 +202,18 @@ paths:
               properties: {}
         description: Invia nome utente e password
       description: Richiedi token di autenticazione
-      parameters: []
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: Content-Type
+          description: application/vnd.api+json
+          required: true
   /allmessage:
     get:
       summary: Your GET endpoint
       tags: []
-      responses: 
+      responses:
         '200':
           description: OK
           content:
@@ -214,7 +241,7 @@ paths:
     get:
       summary: Your GET endpoint
       tags: []
-      responses: 
+      responses:
         '200':
           description: OK
           content:
