@@ -1,0 +1,40 @@
+{
+  "items": [
+    {
+      "type": "divider",
+      "title": "Descrizione del progetto"
+    },
+    {
+      "type": "item",
+      "title": "Descrizione del dominio e del problema",
+      "uri": "reference/maps.v1.yaml"
+    },
+    {
+      "type": "item",
+      "title": "Workflow e artefatti",
+      "uri": "reference/maps.v1.yaml"
+    },
+    {
+      "type": "divider",
+      "title": "Modellazione"
+    },
+    {
+      "type": "divider",
+      "title": "APIS"
+    },
+    {
+      "type": "item",
+      "title": "Maps",
+      "uri": "reference/maps.v1.yaml"
+    },
+    {
+      "type": "item",
+      "title": "Prontogram",
+      "uri": "reference/prontogram.v1.yaml"
+    },    
+    {
+      "type": "divider",
+      "title": "Implementazione"
+    }
+  ]
+}

@@ -106,5 +106,3 @@ components:
       scheme: basic
 security:
   - authorization: []
-tags:
-  - name: Panoramica
