@@ -55,22 +55,35 @@ paths:
               schema:
                 type: object
                 properties:
-                  messageId:
-                    type: array
-                    items:
-                      type: integer
-                  sender:
-                    type: string
-                    nullable: true
-                  body:
-                    type: string
-                    nullable: true
-                  receiver:
-                    type: string
-                  date:
-                    type: string
-                    nullable: true
-                    description: Data di invio del messaggio (giorno e ora)
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                      next:
+                        type: string
+                      previous:
+                        type: string
+                  data:
+                    type: object
+                    properties:
+                      messageId:
+                        type: array
+                        items:
+                          type: integer
+                      sender:
+                        type: string
+                        nullable: true
+                      body:
+                        type: string
+                        nullable: true
+                      receiver:
+                        type: string
+                  meta:
+                    type: object
+                    properties:
+                      date:
+                        type: string
               examples:
                 /message?messageId=100:
                   value:
@@ -204,6 +217,12 @@ paths:
         description: Invia nome utente e password
       description: Richiedi token di autenticazione
       parameters: []
+  /allmessage:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+      operationId: get-allmessage
 components:
   schemas: {}
   securitySchemes: {}
