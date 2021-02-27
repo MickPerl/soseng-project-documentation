@@ -43,6 +43,13 @@ paths:
                   receiver: Mario rossi
                   body: 'Nuova offerta. Codice: 1234'
         description: 'È richiesto un token di autenticazione, un destinatario e il corpo del testo'
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: Content-Type
+          description: Application/json
+          required: true
     parameters: []
     get:
       summary: get message
