@@ -96,6 +96,8 @@ paths:
           required: true
       security:
         - authorization: []
+      tags:
+        - Operazioni
 components:
   schemas: {}
   securitySchemes:
@@ -104,3 +106,5 @@ components:
       scheme: basic
 security:
   - authorization: []
+tags:
+  - name: Panoramica
