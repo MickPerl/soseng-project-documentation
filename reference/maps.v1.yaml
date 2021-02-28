@@ -109,6 +109,9 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  token:
+                    type: string
               examples:
                 Esempio 1:
                   value:

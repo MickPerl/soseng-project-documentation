@@ -2,6 +2,7 @@ openapi: 3.0.0
 info:
   title: prontogram
   version: '1.0'
+  description: È l'API offerta dall'APP di messaggistica *Prontogram* che vi racchiude la capability di inoltrare messaggi.
 servers:
   - url: 'https://soseng-unibo.stoplight.io/mocks/soseng-unibo/soseng-project-documentation/6636887'
     description: testing
@@ -171,8 +172,9 @@ paths:
             schema:
               type: object
               properties: {}
+        description: Dire che è al livello 3 di REST. Ricordarsi di aggiungere i codici di errore per quel livello.
       operationId: post-allmessage
-      description: ''
+      description: 'È la risorsa che, a fronte di una richiesta HTTP che specifica un `token` identificativo, restituisce tutti i messaggi (in blocchi di cardinalità n) cui ha accesso il fruitore (utente o ACMESky) identificato da quel token: in dettaglio, l''''utente ha accesso solo ai messaggi di cui è destinatario, mentre ACMESky ha accesso a tutti i messaggi che ha inoltrato ai suoi utenti mediante Prontogram e potrebbe richiederli per fini statistici, ad esempio.'
       security:
         - tokenSessione: []
       responses:
@@ -215,4 +217,14 @@ paths:
             schema:
               type: object
               properties: {}
-
+components:
+  securitySchemes:
+    tokenSessione:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: ''
+          tokenUrl: ''
+          refreshUrl: ''
+          scopes: {}
+      description: Abbiamo utilizzato OAuth2 come schema di sicurezza perché consente di creare un token di sessione che permette agli utenti di essere identificati da Prontogram e di fruire dei servizi che espone.
