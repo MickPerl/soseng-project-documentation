@@ -1,3 +1,2 @@
-# 2-workflow-artefatti
+# Workflow e artefatti
 
-The beginning of an awesome article...
