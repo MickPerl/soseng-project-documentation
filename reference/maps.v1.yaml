@@ -5,11 +5,11 @@ info:
   description: 'È l''API RESTful offerta dal *Fornitore delle distanze geografiche* che, come suggerisce il nome, vi racchiude la capability di calcolare la distanza tra due posizioni geografiche.'
 servers:
   - url: 'https://soseng-unibo.stoplight.io/mocks/soseng-unibo/soseng-project-documentation/2282674'
-    description: testing
+    description: testingServer
 paths:
   /distance:
     post:
-      summary: Calcola distanza
+      summary: Calcola distanza geografica
       operationId: post-distance
       responses:
         '200':

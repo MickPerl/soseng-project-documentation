@@ -2,9 +2,10 @@ openapi: 3.0.0
 info:
   title: prontogram
   version: '1.0'
+  description: È l'API offerta dall'APP di messaggistica *Prontogram* che vi racchiude la capability di inoltrare messaggi.
 servers:
   - url: 'https://soseng-unibo.stoplight.io/mocks/soseng-unibo/soseng-project-documentation/6636887'
-    description: testing
+    description: testingServer
 paths:
   /message:
     parameters: []
@@ -120,7 +121,7 @@ paths:
       description: Leggi tutti gli id dei messaggi oppure solo un messaggio (fornendo un messageId)
   /token:
     post:
-      summary: ''
+      summary: Richiedi token
       operationId: post-token
       responses:
         '200':
@@ -181,6 +182,15 @@ paths:
                     - password
               required:
                 - data
+            encoding:
+              payload:
+                contentType: application/json
+            examples:
+              Esempio:
+                value:
+                  data:
+                    username: Mario
+                    password: Albatros1a4
           application/xml:
             schema:
               description: ''
@@ -200,15 +210,16 @@ paths:
             schema:
               type: object
               properties: {}
-        description: Invia nome utente e password
-      description: Richiedi token di autenticazione
-      parameters:
-        - schema:
-            type: string
-          in: header
-          name: Content-Type
-          description: application/vnd.api+json
-          required: true
+        description: Specifica il nome utente e la password.
+      description: 'È la risorsa che restituisce un token di autenticazione a fronte di una richiesta HTTP con metodo POST nel cui body sono passati username e password. '
+      parameters: [
+        
+          -in: "header",
+          name: "Content-Type",
+          schema:
+           { type: "string"}
+        
+      ]
   /allmessage:
     get:
       summary: Your GET endpoint
