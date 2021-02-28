@@ -98,6 +98,43 @@ paths:
         - authorization: []
       tags:
         - Operazioni
+  /registration:
+    post:
+      summary: Registra nuovo utente
+      operationId: post-registration
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+              examples:
+                Esempio 1:
+                  value:
+                    token: YNgz+nzCt3jlSXV3
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+            examples:
+              Esempio 1:
+                value:
+                  username: Mario
+                  password: Albatros12
 components:
   schemas: {}
   securitySchemes:
@@ -106,4 +143,4 @@ components:
       scheme: basic
       description: 'Questo schema di sicurezza richiede al client che nella richiesta HTTP passi anche l''header *Authorization* con le sue credenziali: lo abbiamo introdotto perché vogliamo che l''API `maps` sia fruibile solo da soggetti con cui il *Fornitore delle distanze geografiche* ha preso accordi (nel nostro caso le credenziali di accesso saranno date solo ad *ACMESky*).'
 security:
-  - authorization: []
+  - API Key - 1: []
