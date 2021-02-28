@@ -122,61 +122,64 @@ paths:
     post:
       summary: Restituisci tutti i messaggi
       tags: []
-      responses:
-        '200':
-          description: OK
-          content:
-            application/vnd.api+json:
-              schema:
-                description: ''
-                type: object
-                properties:
-                  links:
+      requestBody:
+        content:
+          application/vnd.api+json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                links:
+                  type: object
+                  properties:
+                    self:
+                      type: string
+                      description: link al blocco corrente
+                    next:
+                      type: string
+                      description: link al blocco successivo
+                    prev:
+                      type: string
+                data:
+                  type: array
+                  items:
                     type: object
                     properties:
-                      self:
-                        type: string
-                        description: link al blocco corrente
-                      next:
-                        type: string
-                        description: link al blocco successivo
-                      prev:
-                        type: string
-                  data:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        message:
-                          type: object
-                          properties:
-                            body:
-                              type: string
-                            sender:
-                              type: string
-                            receiver:
-                              type: string
-                            data:
-                              type: string
-                        links:
-                          type: object
-                          properties:
-                            self:
-                              type: string
-                              description: Link al messaggio
-                            next:
-                              type: string
-                              description: link a messaggio successivo in senso temporale
-                            prev:
-                              type: string
-            application/xml:
-              schema:
-                type: object
-                properties: {}
+                      message:
+                        type: object
+                        properties:
+                          body:
+                            type: string
+                          sender:
+                            type: string
+                          receiver:
+                            type: string
+                          data:
+                            type: string
+                      links:
+                        type: object
+                        properties:
+                          self:
+                            type: string
+                            description: Link al messaggio
+                          next:
+                            type: string
+                            description: link a messaggio successivo in senso temporale
+                          prev:
+                            type: string
+          application/xml:
+            schema:
+              type: object
+              properties: {}
       operationId: post-allmessage
       description: ''
       security:
         - tokenSessione: []
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
   /createmessage:
     get:
       summary: Your GET endpoint
@@ -204,8 +207,12 @@ paths:
                 type: object
                 properties: {}
       operationId: get-createmessage
-components:
-  schemas: {}
-  securitySchemes:
-    tokenSessione:
-      type: oauth2
+      security:
+        - tokenSessione: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
+
