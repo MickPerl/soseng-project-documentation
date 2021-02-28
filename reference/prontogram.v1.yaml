@@ -122,7 +122,11 @@ paths:
   /token:
     post:
       summary: Richiedi token
-      operationId: post-token
+      operationId: post-token      
+      consumes: 
+        - application/json
+      produces:
+        - application/json
       responses:
         '200':
           description: OK
@@ -182,9 +186,6 @@ paths:
                     - password
               required:
                 - data
-            encoding:
-              payload:
-                contentType: application/json
             examples:
               Esempio:
                 value:
@@ -212,14 +213,7 @@ paths:
               properties: {}
         description: Specifica il nome utente e la password.
       description: 'È la risorsa che restituisce un token di autenticazione a fronte di una richiesta HTTP con metodo POST nel cui body sono passati username e password. '
-      parameters: [
-        
-          -in: "header",
-          name: "Content-Type",
-          schema:
-           { type: "string"}
-        
-      ]
+      parameters: []
   /allmessage:
     get:
       summary: Your GET endpoint
