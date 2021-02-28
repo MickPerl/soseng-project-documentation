@@ -2,15 +2,14 @@ openapi: 3.0.0
 info:
   title: prontogram
   version: '1.0'
-  description: È l'API offerta dall'APP di messaggistica *Prontogram* che vi racchiude la capability di inoltrare messaggi.
 servers:
   - url: 'https://soseng-unibo.stoplight.io/mocks/soseng-unibo/soseng-project-documentation/6636887'
-    description: testingServer
+    description: testing
 paths:
   /message:
     parameters: []
     post:
-      summary: Restituisci i messaggi
+      summary: get message
       operationId: post-message
       responses:
         '401':
@@ -118,11 +117,11 @@ paths:
               type: object
               properties: {}
         description: È richiesto un token che viene fornito dopo un processo di autenticazione
-      description: ''
-  /token:
+      description: Leggi tutti gli id dei messaggi oppure solo un messaggio (fornendo un messageId)
+  /allmessage:
     post:
-      summary: Genera token
-      operationId: post-token
+      summary: Restituisci tutti i messaggi
+      tags: []
       responses:
         '200':
           description: OK
@@ -132,112 +131,52 @@ paths:
                 description: ''
                 type: object
                 properties:
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        description: link al blocco corrente
+                      next:
+                        type: string
+                        description: link al blocco successivo
+                      prev:
+                        type: string
                   data:
-                    type: object
-                    required:
-                      - token
-                    properties:
-                      token:
-                        type: string
-                        minLength: 1
-                  meta:
-                    type: object
-                    required:
-                      - expiration-date
-                    properties:
-                      expiration-date:
-                        minLength: 1
-                        type: string
-                required:
-                  - data
-                  - meta
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: object
+                          properties:
+                            body:
+                              type: string
+                            sender:
+                              type: string
+                            receiver:
+                              type: string
+                            data:
+                              type: string
+                        links:
+                          type: object
+                          properties:
+                            self:
+                              type: string
+                              description: Link al messaggio
+                            next:
+                              type: string
+                              description: link a messaggio successivo in senso temporale
+                            prev:
+                              type: string
             application/xml:
               schema:
                 type: object
                 properties: {}
-        '400':
-          description: Bad Request
-        '406':
-          description: Not Acceptable
-        '415':
-          description: Unsupported Media Type
-      requestBody:
-        content:
-          application/vnd.api+json:
-            schema:
-              description: ''
-              type: object
-              properties:
-                data:
-                  type: object
-                  properties:
-                    username:
-                      type: string
-                      minLength: 1
-                    password:
-                      type: string
-                      minLength: 1
-                  required:
-                    - username
-                    - password
-              required:
-                - data
-            examples:
-              Esempio:
-                value:
-                  data:
-                    username: Mario
-                    password: Albatros1a4
-          application/xml:
-            schema:
-              description: ''
-              type: object
-              properties:
-                username:
-                  type: string
-                  minLength: 1
-                password:
-                  type: string
-                  minLength: 1
-              required:
-                - username
-                - password
-            examples: {}
-          multipart/form-data:
-            schema:
-              type: object
-              properties: {}
-        description: Specifica il nome utente e la password.
-      description: 'È la risorsa che restituisce un token di autenticazione a fronte di una richiesta HTTP con metodo POST nel cui body sono passati username e password. '
-      parameters: []
-  /allmessage:
-    get:
-      summary: Your GET endpoint
-      tags: []
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                description: ''
-                type: object
-                properties:
-                  token:
-                    type: string
-                    minLength: 1
-                  expiration-date:
-                    type: string
-                    minLength: 1
-                required:
-                  - token
-                  - expiration-date
-            application/xml:
-              schema:
-                type: object
-                properties: {}
-      operationId: get-allmessage
-      description: 'È la risorsa che, a fronte di una richiesta HTTP che specifica un `token` identificativo, restituisce tutti i messaggi (in blocchi di cardinalità n) cui ha accesso il fruitore (utente o ACMESky) identificato da quel token: in dettaglio, l''utente ha accesso solo ai messaggi di cui è destinatario, mentre ACMESky ha accesso a tutti i messaggi che ha inoltrato ai suoi utenti mediante Prontogram e potrebbe richiederli per fini statistici, ad esempio.'
+      operationId: post-allmessage
+      description: ''
+      security:
+        - tokenSessione: []
   /createmessage:
     get:
       summary: Your GET endpoint
@@ -267,4 +206,6 @@ paths:
       operationId: get-createmessage
 components:
   schemas: {}
-  securitySchemes: {}
+  securitySchemes:
+    tokenSessione:
+      type: oauth2

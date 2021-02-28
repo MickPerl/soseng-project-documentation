@@ -109,9 +109,6 @@ paths:
             application/json:
               schema:
                 type: object
-                properties:
-                  token:
-                    type: string
               examples:
                 Esempio 1:
                   value:
@@ -135,6 +132,7 @@ paths:
                 value:
                   username: Mario
                   password: Albatros12
+      description: 'È la risorsa che permette ad un utente di registrarsi, dopo aver fornito la propria username e password.'
 components:
   schemas: {}
   securitySchemes:
