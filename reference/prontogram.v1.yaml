@@ -8,119 +8,7 @@ servers:
     description: testing
 paths:
   /message:
-    parameters: []
-    post:
-      summary: get message
-      operationId: post-message
-      responses:
-        '401':
-          description: Unauthorized
-          headers: {}
-          content:
-            application/json:
-              schema:
-                type: object
-                properties: {}
-        '404':
-          description: Not Found
-        '406':
-          description: Not Acceptable
-        '415':
-          description: Unsupported Media Type
-          content:
-            application/vnd.api+json:
-              schema:
-                type: object
-                properties:
-                  links:
-                    type: object
-                    properties:
-                      self:
-                        type: string
-                      next:
-                        type: string
-                      previous:
-                        type: string
-                  data:
-                    type: object
-                    properties:
-                      body:
-                        type: string
-                        nullable: true
-                  meta:
-                    type: object
-                    properties:
-                      date:
-                        type: string
-                      sender:
-                        type: string
-                      receiver:
-                        type: string
-                      messageId:
-                        type: integer
-              examples:
-                /message?messageId=100:
-                  value:
-                    messageId:
-                      - 100
-                    sender: acmesky
-                    body: 'C''è una nuova offerta, codice offerta: 1234'
-                    receiver: Mario Rossi
-                    date: '20/02/2021, 10:04 CET'
-                /message:
-                  value:
-                    messageId:
-                      - 100
-                      - 101
-                      - 102
-                      - 103
-                    sender: null
-                    body: null
-                    receiver: Mario Rossi
-                    date: null
-      parameters:
-        - schema:
-            type: string
-          in: query
-          name: messageId
-          description: Id del messaggio da leggere
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                token:
-                  type: string
-                  description: token di autenticazione
-              required:
-                - token
-          application/xml:
-            schema:
-              type: object
-              properties: {}
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                '':
-                  type: string
-          text/html:
-            schema:
-              type: object
-              properties: {}
-          text/plain:
-            schema:
-              type: object
-              properties: {}
-          application/EDI-X12:
-            schema:
-              type: object
-              properties: {}
-        description: È richiesto un token che viene fornito dopo un processo di autenticazione
-      description: Leggi tutti gli id dei messaggi oppure solo un messaggio (fornendo un messageId)
-  /allmessage:
-    post:
+    get:
       summary: Restituisci tutti i messaggi
       tags: []
       requestBody:
@@ -129,45 +17,8 @@ paths:
             schema:
               description: ''
               type: object
-              properties:
-                links:
-                  type: object
-                  properties:
-                    self:
-                      type: string
-                      description: link al blocco corrente
-                    next:
-                      type: string
-                      description: link al blocco successivo
-                    prev:
-                      type: string
-                data:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      message:
-                        type: object
-                        properties:
-                          body:
-                            type: string
-                          sender:
-                            type: string
-                          receiver:
-                            type: string
-                          data:
-                            type: string
-                      links:
-                        type: object
-                        properties:
-                          self:
-                            type: string
-                            description: Link al messaggio
-                          next:
-                            type: string
-                            description: link a messaggio successivo in senso temporale
-                          prev:
-                            type: string
+            examples:
+              example-1: {}
           application/xml:
             schema:
               type: object
@@ -180,43 +31,144 @@ paths:
       responses:
         '200':
           description: OK
-        '400':
-          description: Bad Request
-  /createmessage:
-    get:
-      summary: Your GET endpoint
-      tags: []
-      responses:
-        '200':
-          description: OK
           content:
-            application/json:
+            application/vnd.api+json:
               schema:
                 description: ''
                 type: object
                 properties:
-                  token:
-                    type: string
-                    minLength: 1
-                  expiration-date:
-                    type: string
-                    minLength: 1
-                required:
-                  - token
-                  - expiration-date
-            application/xml:
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        description: link al blocco corrente
+                      next:
+                        type: string
+                        description: link al blocco successivo
+                      prev:
+                        type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: object
+                          properties:
+                            body:
+                              type: string
+                            receiver:
+                              type: string
+                            data:
+                              type: string
+                        links:
+                          type: object
+                          properties:
+                            self:
+                              type: string
+                              description: Link al messaggio
+                            next:
+                              type: string
+                              description: link a messaggio successivo in senso temporale
+                            prev:
+                              type: string
+              examples:
+                /message/mariorossi:
+                  value:
+                    links:
+                      self: /message/mariorossi/from/0
+                      next: /message/mariorossi/from/10
+                      prev: /message/mariorossi/from/0
+                    data:
+                      - message:
+                          body: 'nuova offerta, codice 1234'
+                          receiver: mariorossi
+                          date: '2020-03-02, 16:06 CET'
+                        links:
+                          self: /message/mariorossi/0
+                          next: /message/mariorossi/1
+                          prev: /message/mariorossi/0
+                      - message:
+                          body: 'nuova offerta, codice 1235'
+                          receiver: mariorossi
+                          date: '2020-03-05, 12:06 CET'
+                        links:
+                          self: /message/mariorossi/1
+                          next: /message/mariorossi/2
+                          prev: /message/mariorossi/0
+                /message/mariorossi/4:
+                  value:
+                    links:
+                      self: /message/mariorossi/4
+                      next: /message/mariorossi/5
+                      prev: /message/mariorossi/3
+                    data:
+                      - message:
+                          body: 'nuova offerta, codice 1234'
+                          receiver: mariorossi
+                          date: '2020-03-02, 16:06 CET'
+                        links:
+                          self: /message/mariorossi/4
+                          next: /message/mariorossi/5
+                          prev: /message/mariorossi/3
+        '400':
+          description: Bad Request
+        '406':
+          description: Not Acceptable
+        '415':
+          description: Unsupported Media Type
+    parameters: []
+  /createmessage:
+    post:
+      summary: ''
+      operationId: post-createmessage
+      responses:
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+          headers:
+            Content-Type:
               schema:
-                type: object
-                properties: {}
-      operationId: get-createmessage
+                type: string
+              description: application/vnd.api+json
+        '406':
+          description: Not Acceptable
+        '415':
+          description: Unsupported Media Type
+      description: Crea (manda) un messaggio
+      parameters: []
       security:
         - tokenSessione: []
       requestBody:
         content:
-          application/json:
+          application/vnd.api+json:
             schema:
+              description: ''
               type: object
-              properties: {}
+              properties:
+                data:
+                  type: object
+                  properties:
+                    receiver:
+                      type: string
+                      minLength: 1
+                    body:
+                      type: string
+                      minLength: 1
+                  required:
+                    - receiver
+                    - body
+              required:
+                - data
+            examples:
+              Esempio di messaggio:
+                value:
+                  data:
+                    receiver: Mario rossi
+                    body: 'Nuova offerta. Inserisci codice sul sito: 1234'
+        description: Formato del messaggio
 components:
   securitySchemes:
     tokenSessione:
