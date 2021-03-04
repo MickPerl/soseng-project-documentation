@@ -1,0 +1,189 @@
+openapi: 3.0.0
+info:
+  title: compagnia_aerea.v1
+  version: '1.0'
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  /flights:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  flights:
+                    type: array
+                    uniqueItems: true
+                    minItems: 1
+                    items:
+                      type: object
+                      properties:
+                        departure-from:
+                          type: string
+                          minLength: 1
+                        takeoff:
+                          type: string
+                          minLength: 1
+                        destination:
+                          type: string
+                          minLength: 1
+                        price:
+                          type: object
+                          properties:
+                            amount:
+                              type: integer
+                            currency:
+                              type: string
+                        id:
+                          type: string
+                      required:
+                        - departure-from
+                        - takeoff
+                        - destination
+                        - price
+                  companyname:
+                    type: string
+                required:
+                  - flights
+              examples:
+                example-1:
+                  value:
+                    flights:
+                      - departure-from: BLQ
+                        takeoff: '2020-04-27, 10.00AM, CET'
+                        destination: BCN
+                        price:
+                          value: 100
+                          currency: €
+                        id: ryan253
+                    companyname: ryanflights
+        '500':
+          description: Internal Server Error
+      operationId: get-flights
+      description: Restituisce tutte le offerte di voli attive
+  /notifypayment:
+    post:
+      summary: ''
+      operationId: post-notifypayment
+      responses:
+        '200':
+          description: OK
+      security:
+        - companytoken: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                flight_id:
+                  type: string
+                  minLength: 1
+                client:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      minLength: 1
+                    email:
+                      type: string
+                      minLength: 1
+                  required:
+                    - name
+                    - email
+                amount_payed:
+                  type: object
+                  properties:
+                    value:
+                      type: number
+                    currency:
+                      type: string
+                      minLength: 1
+                  required:
+                    - value
+                    - currency
+                transaction:
+                  type: object
+                  properties:
+                    date:
+                      type: string
+                      minLength: 1
+                    id:
+                      type: number
+                  required:
+                    - date
+                    - id
+              required:
+                - flight_id
+                - client
+                - amount_payed
+                - transaction
+            examples:
+              example-1:
+                value:
+                  flight_id: ryan253
+                  client:
+                    name: Mario Rossi
+                    email: mariorossi@gmail.com
+                  amount_payed:
+                    value: 100
+                    currency: €
+                  transaction:
+                    date: '2020-05-22, 13.45PM, CET'
+                    id: 2542
+components:
+  schemas:
+    User:
+      title: User
+      type: object
+      description: ''
+      x-examples:
+        Alice Smith:
+          id: 142
+          firstName: Alice
+          lastName: Smith
+          email: alice.smith@gmail.com
+          dateOfBirth: '1997-10-31'
+          emailVerified: true
+          signUpDate: '2019-08-24'
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the given user.
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+        dateOfBirth:
+          type: string
+          format: date
+          example: '1997-10-31'
+        emailVerified:
+          type: boolean
+          description: Set to true if the user's email has been verified.
+        createDate:
+          type: string
+          format: date
+          description: The date that the user was created.
+      required:
+        - id
+        - firstName
+        - lastName
+        - email
+        - emailVerified
+  securitySchemes:
+    companytoken:
+      name: abcd1234!@
+      type: apiKey
+      in: header

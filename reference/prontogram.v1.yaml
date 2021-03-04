@@ -118,7 +118,8 @@ paths:
           description: Not Acceptable
         '415':
           description: Unsupported Media Type
-    parameters: []
+    parameters:
+      - required: true
   /createmessage:
     post:
       summary: ''
@@ -169,6 +170,242 @@ paths:
                     receiver: Mario rossi
                     body: 'Nuova offerta. Inserisci codice sul sito: 1234'
         description: Formato del messaggio
+  '/message/{username}':
+    parameters:
+      - schema:
+          type: string
+        name: username
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '308':
+          description: Permanent Redirect (experiemental)
+          headers:
+            Location:
+              schema:
+                type: string
+              description: '/message/{username}/from/0'
+        '400':
+          description: Bad Request
+        '406':
+          description: Not Acceptable
+        '415':
+          description: Unsupported Media Type
+      operationId: get-message-username
+      security:
+        - tokenSessione: []
+  '/message/{username}/from/{messageid}':
+    parameters:
+      - schema:
+          type: string
+        name: username
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: messageid
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: array
+                        uniqueItems: true
+                        minItems: 1
+                        items:
+                          required:
+                            - sender
+                            - body
+                            - date
+                          properties:
+                            sender:
+                              type: string
+                              minLength: 1
+                            body:
+                              type: string
+                              minLength: 1
+                            date:
+                              type: string
+                              minLength: 1
+                            links:
+                              type: object
+                              properties:
+                                self:
+                                  type: string
+                                  minLength: 1
+                                next:
+                                  type: string
+                                  minLength: 1
+                                prev:
+                                  type: string
+                                  minLength: 1
+                              required:
+                                - self
+                                - next
+                                - prev
+                    required:
+                      - message
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        minLength: 1
+                      next:
+                        type: string
+                        minLength: 1
+                      prev:
+                        type: string
+                        minLength: 1
+                    required:
+                      - self
+                      - next
+                      - prev
+                required:
+                  - data
+                  - links
+              examples:
+                example-1:
+                  value:
+                    data:
+                      message:
+                        - sender: ACMEsky
+                          body: 'Nuova offerta, inserisci codice 1234'
+                          date: '2021-03-04, 21:25 CET'
+                          links:
+                            self: /message/mariorossi/0
+                            next: /message/mariorossi/1
+                            prev: /message/mariorossi/0
+                        - sender: ACMEsky
+                          body: 'Nuova offerta, inserisci codice 4321'
+                          date: '2021-03-04, 21:25 CET'
+                          links:
+                            self: /message/mariorossi/1
+                            next: /message/mariorossi/2
+                            prev: /message/mariorossi/0
+                    links:
+                      self: /message/mariorossi/from/0
+                      next: /message/mariorossi/from/10
+                      prev: /message/mariorossi/from/0
+        '400':
+          description: Bad Request
+        '406':
+          description: Not Acceptable
+        '415':
+          description: Unsupported Media Type
+      operationId: get-message-username-from-messageid
+      security:
+        - tokenSessione: []
+  '/message/{username}/{messageid}':
+    parameters:
+      - schema:
+          type: string
+        name: username
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: messageid
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      sender:
+                        type: string
+                        minLength: 1
+                      body:
+                        type: string
+                        minLength: 1
+                      date:
+                        type: string
+                        minLength: 1
+                    required:
+                      - sender
+                      - body
+                      - date
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        minLength: 1
+                      next:
+                        type: string
+                        minLength: 1
+                      prev:
+                        type: string
+                        minLength: 1
+                    required:
+                      - self
+                      - next
+                      - prev
+                  meta:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                    required:
+                      - id
+                required:
+                  - data
+                  - links
+                  - meta
+              examples:
+                example 1:
+                  value:
+                    data:
+                      sender: ACMEsky
+                      body: 'Nuova offerta, inserisci codice 1234'
+                      date: '2021-03-04, 21:25 CET'
+                    links:
+                      self: /message/mariorossi/1
+                      next: /message/mariorossi/2
+                      prev: /message/mariorossi/0
+                    meta:
+                      id: 1234
+        '400':
+          description: Bad Request
+        '406':
+          description: Not Acceptable
+        '415':
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      operationId: get-message-username-messageid
+      security:
+        - tokenSessione: []
 components:
   securitySchemes:
     tokenSessione:
