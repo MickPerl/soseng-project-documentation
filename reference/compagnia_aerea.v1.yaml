@@ -38,7 +38,7 @@ paths:
                           type: object
                           properties:
                             amount:
-                              type: integer
+                              type: number
                             currency:
                               type: string
                         id:
@@ -87,8 +87,12 @@ paths:
                 flight_id:
                   type: string
                   minLength: 1
+                  description: identificatore biglietto
                 client:
                   type: object
+                  required:
+                    - name
+                    - email
                   properties:
                     name:
                       type: string
@@ -96,31 +100,28 @@ paths:
                     email:
                       type: string
                       minLength: 1
-                  required:
-                    - name
-                    - email
                 amount_payed:
                   type: object
+                  required:
+                    - value
+                    - currency
                   properties:
                     value:
                       type: number
                     currency:
                       type: string
                       minLength: 1
-                  required:
-                    - value
-                    - currency
                 transaction:
                   type: object
+                  required:
+                    - date
+                    - id
                   properties:
                     date:
                       type: string
                       minLength: 1
                     id:
                       type: number
-                  required:
-                    - date
-                    - id
               required:
                 - flight_id
                 - client
