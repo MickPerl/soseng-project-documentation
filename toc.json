@@ -20,22 +20,23 @@
     },
     {
       "type": "item",
-      "title": "Coreografie",
-      "uri": "docs/2-workflow-artefatti.md"
+      "title": "Coreografia e proiezioni",
+      "uri": "docs/3-coreografia.md"
     },
     {
       "type": "item",
       "title": "Diagramma BPMN",
-      "uri": "docs/2-workflow-artefatti.md"
+      "uri": "docs/4-diagramma-BPMN.md"
     },
     {
       "type": "item",
       "title": "Modello UML (TinySOA)",
-      "uri": "docs/2-workflow-artefatti.md"
+      "uri": "docs/5-modello-UML.md"
     },
     {
       "type": "group",
       "title": "Interfacce",
+      "uri": "docs/5-modello-UML.md",
       "items": [
         {
           "type": "group",
@@ -50,6 +51,16 @@
               "type": "item",
               "title": "Prontogram",
               "uri": "reference/prontogram.v1.yaml"
+            },
+            {
+              "type": "item",
+              "title": "Compagnia aerea",
+              "uri": "reference/compagnia_aerea.v1.yaml"
+            },
+            {
+              "type": "item",
+              "title": "Fornitore servizi bancari",
+              "uri": "reference/fornitore_servizi_bancari.v1.yaml"
             }
           ]
         },
@@ -60,11 +71,6 @@
             {
               "type": "item",
               "title": "Compagnia-trasporto",
-              "uri": "docs/2-workflow-artefatti.md"
-            },
-            {
-              "type": "item",
-              "title": "Altro",
               "uri": "docs/2-workflow-artefatti.md"
             }
           ]
