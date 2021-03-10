@@ -152,6 +152,13 @@ Nell'ambito della comunicazione `invio_codice_offerta`, il cliente invia ad ACME
 
 ## Proprietà di connectedness rispettate
 
+Abbiamo valutato quali *proprietà di connectedness* fossero soddisfatte dalla coreografia: abbiamo apportato delle modifiche alla versione iniziale, per ampliare il rispetto delle proprietà.
+
+In prima battuta, abbiamo dovuto comprendere se lo scenario oggetto del progetto rientrasse nel caso sincrono ovvero in quello asincrono; a dirimere la questione sono stati, tra gli altri, i clienti che, secondo la nostra modellazione, possono indicare le proprie esigenze sul portale ACMESky più volte, ancor prima di ricevere le eventuali risposta_offerte corrispondenti e le risposta_offerte last-minute che possono, in qualunque momento, essere inviate dalle compagnie aeree alla volta di ACMESky.
+Pertanto, siamo giunti alla conclusione che questo scenario rientri nel caso asincrono.
+
+Quindi, abbiamo valutato ogni operatore sequenziale, di scelta non deterministica, ciascuna iterazione, nonchè l’utilizzo multiplo di medesime operazioni: quindi, abbiamo rifinito la coreografia scritta in principio, migliorando le proprietà di connectedness, arrivando alla coreografia sopra presentata, che risulta essere connessa per le scelte condizionali e per sequenza secondo il pattern Sender.
+
 ### Registrazione interessi utente
 
 <!--
