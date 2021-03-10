@@ -14,7 +14,7 @@ Abbiamo modellato l'intera realtà della piattaforma ACMESky, compresi i dettagl
 
 [Link al diagramma BPMN](4-diagramma-BPMN.md "Clicca per andare all'artefatto corrispondente")
 
-### 3. Progettazione di una SOA e documentazione in UML
+### 3. Progettazione di una SOA e modello UML
 Abbiamo progettato una *Service Oriented Architecture* (SOA) che realizzi la piattaforma in considerazione, che abbiamo quindi documentato utilizzando UML: in dettaglio, ci siamo serviti del profilo *TinySOA*, in quanto mette a disposizione gli artefatti e gli stereotipi appropriati per le nostre esigenze documentative.
 
 [Link alla modello UML](5-modello-UML.md "Clicca per andare all'artefatto corrispondente")
