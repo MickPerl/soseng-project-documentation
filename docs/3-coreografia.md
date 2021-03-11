@@ -2,7 +2,7 @@
 
 Abbiamo modellato le comunicazioni dello scenario in oggetto definendo una coreografia: in dettaglio, per la sua definizione formale ci siamo serviti di un *process calculi*, essendo più accurato di WS-CDL e della formalizzazione per le coreografie di BPMN.
 
-Abbiamo poi verificato le proprietà di connectedness e quindi proiettato l'output in un sistema di ruoli.
+Abbiamo poi verificato le condizioni di connectedness e quindi proiettato l'output in un sistema di ruoli.
 
 ## Coreografia
 La coreografia cui siamo giunti dopo numerosi confronti, riflessioni e iterazioni è presentata di seguito: 
@@ -57,7 +57,7 @@ title: "Articolazione della coreografia in sotto-coreografie"
 C::= registrazione_interessi_utente | richiesta_e_inoltro_offerte | ricezione_e_inoltro_offerte_LM | acquisto_biglietto
 ```
 
-Passiamo in rassegna ciascun blocco, esplicitando la semantica di ogni comunicazione, nonché le proprietà di connectedness soddisfatte.
+Passiamo in rassegna ciascun blocco, esplicitando la semantica di ogni comunicazione, nonché le condizioni di connectedness rispettate.
 
 ### Registrazione interessi utente
 
@@ -156,7 +156,7 @@ Nell'ambito della comunicazione `invio_codice_offerta`, il cliente invia ad ACME
     - non appena ACMESky ha ricevuto la sua quota, verifica che sussistano le condizioni per proporre al cliente il servizio di trasporto e, in caso positivo, invia la proposta al cliente con la comunicazione `proposta_trasferimento`: nel caso l'utente rifiuti, non segue alcuna comunicazione, diversamente ACMESky con la comunicazione `prenotazione_trasferimento` effettua la prenotazione con la compagnia di trasporto selezionata. 
 
 
-## Proprietà di connectedness rispettate
+## Verifica delle condizioni di connectedness
 In prima battuta, abbiamo dovuto comprendere se lo scenario in oggetto rientrasse nel caso sincrono o in quello asincrono; a dirimere la questione sono stati, tra gli altri:
 - i *clienti* i quali possono indicare le proprie esigenze sul portale di ACMESky più volte, ancor prima di ricevere le eventuali offerte corrispondenti;
 - le offerte last-minute che possono inviate in qualsiasi momento dalle compagnie aeree ad ACMESky.
