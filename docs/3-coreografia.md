@@ -54,7 +54,7 @@ Per illustrare ogni punto di questa coreografia, l'articoliamo nei 4 blocchi seg
 title: "Articolazione della coreografia in sotto-coreografie"
 -->
 ```javascript
-C::= registrazione_interessi_utente | richiesta_e_inoltro_offerte | ricezione_e_inoltro_offerte_LM | acquisto_biglietto
+C::= registrazione_interessi_utente | richiesta_e_inoltro_offerte | ricezione_e_inoltro_offerte_LM | acquisto_offerta
 ```
 
 Passiamo in rassegna ciascun blocco, esplicitando la semantica di ogni comunicazione, nonché le condizioni di connectedness rispettate.
@@ -133,10 +133,10 @@ Sebbene trattasi delle stesse comunicazioni, abbiamo deciso di chiamarle diversa
 
 ### Acquisto biglietto
 <!--
-title: "Sotto-coreografia: acquisto_biglietto"
+title: "Sotto-coreografia: acquisto_offerta"
 -->
 ```javascript
-acquisto_biglietto ::= invio_codice_offerta: cliente --> acmesky ;
+acquisto_offerta ::= invio_codice_offerta: cliente --> acmesky ;
 (notifica_errore_codice: acmesky --> cliente) +
 (invia_link_banca: acmesky --> cliente ;
 pagamento: cliente --> fornitore_servizi_bancari ;
@@ -176,7 +176,7 @@ Per una maggiore chiarezza, riproponiamo l'articolazione della coregrafia di cui
 title: "Articolazione della coreografia in sotto-coreografie"
 -->
 ```javascript
-C::= registrazione_interessi_utente | richiesta_e_inoltro_offerte | ricezione_e_inoltro_offerte_LM | acquisto_biglietto
+C::= registrazione_interessi_utente | richiesta_e_inoltro_offerte | ricezione_e_inoltro_offerte_LM | acquisto_offerta
 ```
 
 Le diverse sotto-coreografie sono eseguite in parallelo: ai fini della connectedness, non vi sono condizioni per la composizione parallela, per cui possiamo ridurre la nostra analisi direttamente al livello delle sotto-coreografie. 
@@ -244,10 +244,10 @@ La comunicazione `invio_offerte_LM` è connessa per sequenza con l'operazione se
 
 ### Acquisto biglietto
 <!--
-title: "Sotto-coreografia: acquisto_biglietto"
+title: "Sotto-coreografia: acquisto_offerta"
 -->
 ```javascript
-acquisto_biglietto ::= invio_codice_offerta: cliente --> acmesky ;
+acquisto_offerta ::= invio_codice_offerta: cliente --> acmesky ;
 (notifica_errore_codice: acmesky --> cliente) +
 (invia_link_banca: acmesky --> cliente ;
 pagamento: cliente --> fornitore_servizi_bancari ;
