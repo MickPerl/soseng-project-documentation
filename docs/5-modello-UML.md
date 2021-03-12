@@ -10,12 +10,14 @@ Questo profilo presenta tre artefatti volti a contenere le interfacce e le capab
 Abbiamo analizzato minuziosamente il diagramma BPMN elaborato e, per ogni partecipante, abbiamo individuato le capability racchiuse nei servizi che vengono ad essere integrati e le interfacce che permettono di accedere ai servizi stessi. 
 
 Il modello UML cui siamo giunti è qui riportato:
-![Modello UML con profilo TinySOA](assets/images/UML_totale.png "Modello UMLLL con profilo TinySOA")
+![Modello UML con profilo TinySOA](https://github.com/MickPerl/soseng-project-documentation/blob/master/assets/images/UML_totale.png?raw=true
+ "Modello UMLLL con profilo TinySOA")
 
 Di seguito, passiamo in rassegna la semantica delle capability di ogni partecipante, indicando le interfacce che permettono di accedervi.
 
 ## Registrazione interessi degli utenti
-
+![Modello UML con profilo TinySOA](https://github.com/MickPerl/soseng-project-documentation/blob/master/assets/images/UML_registra_interessi.png?raw=true
+ "Modello UMLLL con profilo TinySOA")
 ## Richiesta e inoltro delle offerte
 
 ## Ricezione e inoltro delle offerte LM
