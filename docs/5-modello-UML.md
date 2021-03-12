@@ -23,11 +23,25 @@ Per una maggiore chiarezza, articoliamo anche la trattazione sul modello UML nel
 ![Modello UML con profilo TinySOA](https://github.com/MickPerl/soseng-project-documentation/blob/master/assets/images/UML_registra_interessi.png?raw=true
  "Modello UML relativo alla registrazione degli interessi degli utenti")
 
+In questa parte, le capability essenziali sono quelle di ACMESky:
+- `MemorizzazioneInteressi` rende persistenti gli interessi registrati  ed è esposta dall'interfaccia **salvataggioInteressiInterno**, la quale presenta l'operazione *inviaInteressi* che viene invocata internamente da ACMESky per rendere persistenti gli interessi;
+- `RegistrazioneInteressi` realizza la registrazione degli interessi dell'utente ed è esposta dall'interfaccia **invioInteressi**, la quale presenta l'operazione *inviaInteressi* che viene invocata dall'utente per specificare i propri interessi;
+  - questa capability necessita delle interfacce **salvataggioInteressiInterno** di cui sopra e **invioAck** del Cliente, in quanto, per finalizzare la registrazione degli interessi, ne deve notificare all'utente l'esito della ricezione e deve renderli persistenti.
 
 ## Richiesta e inoltro delle offerte
 ![Modello UML con profilo TinySOA](https://github.com/MickPerl/soseng-project-documentation/blob/master/assets/images/UML_richiesta_inoltro.png?raw=true
  "Modello UML relativo alla richiesta e all'inoltro delle offerte")
+Questa parte attiene alle seguenti attività:
+- la richiesta delle offerte attive alle compagnie aeree da parte di ACMESky;
+- la ricerca di corrispondenze tra le offerte e gli interessi degli utenti;
+- l'invio delle offerte che incontrano gli interessi di qualche utente a Prontogram da parte di ACMESky;
+- l'inoltro delle offerte agli utenti interessati da parte di Prontogram.
 
+Come già esplicitato nella sezione delle coreografie, per ogni offerta, ACMESky invia a Prontogram una *descrizione*, il/i *cliente/i cui è indirizzata* e tanti *codici* quanti sono i clienti destinatari, ognuno dei quali individua univocamente l'offerta e il cliente.
+
+Le capability coinvolte sono:
+- `GestioneCorrispondenzaOfferteInteressi` cerca match tra le offerte rivevute dalle compagnie aeree e : in dettaglio, le operazioni necessarie a realizzarla sono esposte da due interfacce diverse, **d** accessibile dall'esterno e **d**
+  - dipende dalle interfacce **InoltroCodice** di Prontogram e **RichiestaOfferte** della compagnia aerea, in quanto, per finalizzarsi, deve inoltrare 
 
 ## Ricezione e inoltro delle offerte LM
 Uguale a prima
@@ -35,6 +49,7 @@ Uguale a prima
 L'operazione 
 Un'offerta last minute si distingue da una ordinaria per i seguenti aspetti:
 - l'offerta  
+
 
 
 ## Acquisto offerta
