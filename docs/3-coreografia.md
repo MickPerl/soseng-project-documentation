@@ -8,7 +8,7 @@ Abbiamo poi verificato le condizioni di connectedness e quindi proiettato l'outp
 La coreografia cui siamo giunti dopo numerosi confronti, riflessioni e iterazioni è presentata di seguito: 
 
 ```javascript
-C ::= (invio_interessi: cliente --> acmesky)*
+C ::= (<span style="text-decoration:overline">invio_interessi</span>: cliente --> acmesky)*
 
 |
 
@@ -39,10 +39,12 @@ inoltro_offerte_LM: prontogram --> cliente_nz) ))
 | 
 
 (invio_codice_offerta: cliente --> acmesky ;
-1 + (invia_link_banca: acmesky --> cliente ;
+(notifica_errore_codice: acmesky --> cliente) +
+(invia_link_banca: acmesky --> cliente ;
 pagamento: cliente --> fornitore_servizi_bancari ;
-1 + ((invio_quota_pagamento: fornitore_servizi_bancari  --> compagnia_aerea ;
-invio_biglietto: compagnia_aerea --> cliente ) | 
+(notifica_errore_pagamento: fornitore_servizi_bancari --> cliente) +
+( (invio_quota_pagamento: fornitore_servizi_bancari  --> compagnia_aerea ;
+invio_biglietto: compagnia_aerea --> cliente) | 
 invio_quota_pagamento: fornitore_servizi_bancari --> acmesky ;
 1 + (proposta_trasferimento: acmesky --> cliente ; 
 1 + prenotazione_trasferimento: acmesky --> compagnia_trasporto_vicina) )))
@@ -148,9 +150,9 @@ invio_quota_pagamento: fornitore_servizi_bancari --> acmesky ;
 1 + prenotazione_trasferimento: acmesky --> compagnia_trasporto_vicina) ))
 ```
 Nell'ambito della comunicazione `invio_codice_offerta`, il cliente invia ad ACMESky il codice identificativo dell'offerta che intende acquistare; ACMESky verifica la correttezza del codice ricevuto:
-- in caso sia scorretto, non segue alcuna comunicazione;
+- in caso sia scorretto, ACMESky lo notifica al cliente;
 - in caso sia corretto, mediante la comunicazione `invia_link_banca`, ACMESky invia al cliente il link al fornitore di servizi bancari cui si appoggia per i pagamenti; il cliente apre il link e, con la comunicazione `pagamento` realizza la transazione con il fornitore dei servizi bancari;
-  - in caso il pagamento sia fallito, non segue alcuna comunicazione;
+  - in caso il pagamento sia fallito, il fornitore dei servizi bancari lo notifica al cliente;
   - in caso il pagamento abbia avuto successo, il fornitore dei servizi bancari, in parallelo, invia la quota dovuta alla compagnia aerea e ad ACMESky, con la comunicazione `invio_quota_pagamento`;
     - dopo che la compagnia aerea ha ricevuto la sua quota, con la comunicazione `invio_biglietto`, invia il biglietto dell'offerta acquistata al cliente;
     - non appena ACMESky ha ricevuto la sua quota, verifica che sussistano le condizioni per proporre al cliente il servizio di trasporto e, in caso positivo, invia la proposta al cliente con la comunicazione `proposta_trasferimento`: nel caso l'utente rifiuti, non segue alcuna comunicazione, diversamente ACMESky con la comunicazione `prenotazione_trasferimento` effettua la prenotazione con la compagnia di trasporto selezionata. 
