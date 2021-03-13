@@ -1,8 +1,8 @@
 openapi: 3.0.0
 info:
-  title: prontogram
+  title: prontogramAPI
   version: '1.0'
-  description: È l'API offerta dall'APP di messaggistica *Prontogram* che vi racchiude la capability di inoltrare messaggi.
+  description: È l'API offerta dall'applicazione di messaggistica *Prontogram* che vi racchiude la capability di inoltrare i messaggi circa le offerte inviate da ACMESky ai clienti interessati.
 servers:
   - url: 'https://soseng-unibo.stoplight.io/mocks/soseng-unibo/soseng-project-documentation/6636887'
     description: testing
@@ -23,9 +23,9 @@ paths:
             schema:
               type: object
               properties: {}
-        description: Dire che è al livello 3 di REST. Ricordarsi di aggiungere i codici di errore per quel livello.
+        description: 'Il body della richiesta e della risposta HTTP è di tipo `application/vnd.api+json` in quanto l''API prontogramAPI è al livello 3 di modello di maturità di Richardson: nella risposta sono presenti anche i campi `links` per permettere l''esplorazione dinamica, come richiesto da RMML3.'
       operationId: post-allmessage
-      description: 'È la risorsa che, a fronte di una richiesta HTTP che specifica un `token` identificativo, restituisce tutti i messaggi (in blocchi di cardinalità n) cui ha accesso il fruitore (utente o ACMESky) identificato da quel token: in dettaglio, l''''utente ha accesso solo ai messaggi di cui è destinatario, mentre ACMESky ha accesso a tutti i messaggi che ha inoltrato ai suoi utenti mediante Prontogram e potrebbe richiederli per fini statistici, ad esempio.'
+      description: 'È la risorsa che, a fronte di una richiesta HTTP nella cui intestazione vi è un `token` identificativo valido, restituisce tutti i messaggi (in blocchi di cardinalità 20) accessibili al fruitore (utente o ACMESky) identificato da quel token: in dettaglio, l''utente ha accesso solo ai messaggi di cui è destinatario, mentre ACMESky ha accesso a tutti i messaggi che ha inoltrato ai suoi utenti mediante Prontogram (potrebbe richiederli per fini statistici, ad esempio).'
       security:
         - tokenSessione: []
       responses:
@@ -39,15 +39,17 @@ paths:
                 properties:
                   links:
                     type: object
+                    description: Link a livello dei blocchi di messaggi
                     properties:
                       self:
                         type: string
-                        description: link al blocco corrente
+                        description: Link al blocco corrente
                       next:
                         type: string
-                        description: link al blocco successivo
+                        description: Link al blocco successivo in senso temporale
                       prev:
                         type: string
+                        description: Link al blocco precedente in senso temporale
                   data:
                     type: array
                     items:
@@ -58,21 +60,26 @@ paths:
                           properties:
                             body:
                               type: string
+                              description: Descrizione dell'offerta e codice identificativo della coppia cliente - offerta
                             receiver:
                               type: string
                             data:
-                              type: string
+                              $ref: ./compagnia_trasporto.v1.yaml#/components/schemas/data
+                            id:
+                              type: integer
                         links:
                           type: object
+                          description: Link a livello dei singoli messaggiLink a livello dei singoli messaggi
                           properties:
                             self:
                               type: string
-                              description: Link al messaggio
+                              description: Link al messaggio corrente
                             next:
                               type: string
-                              description: link a messaggio successivo in senso temporale
+                              description: Link a messaggio successivo in senso temporale
                             prev:
                               type: string
+                              description: Link al messaggio precedente in senso temporale
               examples:
                 /message/mariorossi:
                   value:
@@ -122,7 +129,7 @@ paths:
       - required: true
   /createmessage:
     post:
-      summary: ''
+      summary: Invia messaggio
       operationId: post-createmessage
       responses:
         '200':
@@ -131,16 +138,12 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
-          headers:
-            Content-Type:
-              schema:
-                type: string
-              description: application/vnd.api+json
+          headers: {}
         '406':
           description: Not Acceptable
         '415':
           description: Unsupported Media Type
-      description: Crea (manda) un messaggio
+      description: 'È la risorsa che, a fronte di una richiesta HTTP nella cui intestazione vi è un `token` identificativo valido, invia un messaggio il cui corpo e destinatario sono quelli specificati nel body della richiesta HTTP.'
       parameters: []
       security:
         - tokenSessione: []
@@ -156,22 +159,16 @@ paths:
                   properties:
                     receiver:
                       type: string
-                      minLength: 1
                     body:
                       type: string
-                      minLength: 1
-                  required:
-                    - receiver
-                    - body
-              required:
-                - data
+                      description: Descrizione dell'offerta e codice identificativo della coppia cliente - offerta
             examples:
               Esempio di messaggio:
                 value:
                   data:
                     receiver: Mario rossi
                     body: 'Nuova offerta. Inserisci codice sul sito: 1234'
-        description: Formato del messaggio
+        description: Il body della richiesta HTTP è di tipo `application/vnd.api+json` in quanto l'API prontogramAPI è al livello 3 di modello di maturità di Richardson.
   '/message/{username}':
     parameters:
       - schema:
@@ -180,7 +177,7 @@ paths:
         in: path
         required: true
     get:
-      summary: Your GET endpoint
+      summary: Restituisci i primi 10 messaggi del cliente
       tags: []
       responses:
         '308':
@@ -199,6 +196,10 @@ paths:
       operationId: get-message-username
       security:
         - tokenSessione: []
+      description: |-
+        È la risorsa che, a fronte di una richiesta HTTP nella cui intestazione vi è un `token` identificativo valido, restituisce i primi 20 messaggi inviati al cliente il cui username è pari al parametro di query `username`.
+
+        In caso la richiesta HTTP abbia esito positivo, la risposta è un reindirizzamento alla risorsa `/message/{username}/from/0`
   '/message/{username}/from/{messageid}':
     parameters:
       - schema:
@@ -212,78 +213,62 @@ paths:
         in: path
         required: true
     get:
-      summary: Your GET endpoint
+      summary: Restituisci 10 messaggi del cliente
       tags: []
       responses:
         '200':
           description: OK
           content:
-            application/json:
+            application/vnd.api+json:
               schema:
                 description: ''
                 type: object
                 properties:
                   data:
                     type: object
+                    description: ''
                     properties:
                       message:
                         type: array
                         uniqueItems: true
-                        minItems: 1
                         items:
-                          required:
-                            - sender
-                            - body
-                            - date
+                          type: object
                           properties:
-                            sender:
-                              type: string
-                              minLength: 1
                             body:
                               type: string
-                              minLength: 1
-                            date:
-                              type: string
-                              minLength: 1
+                              description: Descrizione dell'offerta e codice identificativo della coppia cliente - offerta
+                            data:
+                              $ref: ./compagnia_trasporto.v1.yaml#/components/schemas/data
                             links:
                               type: object
+                              description: Link a livello dei singoli messaggi
                               properties:
                                 self:
                                   type: string
-                                  minLength: 1
+                                  description: Link a messaggio corrente
                                 next:
                                   type: string
-                                  minLength: 1
+                                  description: Link a messaggio successivo in senso temporale
                                 prev:
                                   type: string
-                                  minLength: 1
-                              required:
-                                - self
-                                - next
-                                - prev
-                    required:
-                      - message
+                                  description: Link a messaggio precedente in senso temporale
+                            id:
+                              type: integer
                   links:
                     type: object
+                    description: Link a livello dei blocchi di messaggi
                     properties:
                       self:
                         type: string
-                        minLength: 1
+                        description: Link al blocco corrente in senso temporale
                       next:
                         type: string
-                        minLength: 1
+                        description: Link al blocco successivo in senso temporale
                       prev:
                         type: string
-                        minLength: 1
-                    required:
-                      - self
-                      - next
-                      - prev
-                required:
-                  - data
-                  - links
+                        description: Link al blocco precedente in senso temporale
               examples:
-                example-1:
+                Esempio 1:
                   value:
                     data:
                       message:
@@ -314,6 +299,10 @@ paths:
       operationId: get-message-username-from-messageid
       security:
         - tokenSessione: []
+      description: |-
+        È la risorsa che, a fronte di una richiesta HTTP nella cui intestazione vi è un `token` identificativo valido, restituisce i 10 messaggi successivi a quello con id pari al parametro di query `messageId` e inviati al cliente il cui username è pari al parametro di query `username`.
+
+        Il body della richiesta e della risposta HTTP è di tipo `application/vnd.api+json` in quanto l'API prontogramAPI è al livello 3 di modello di maturità di Richardson: nella risposta sono presenti anche i campi `links` per permettere l'esplorazione dinamica, come richiesto da RMML3.
   '/message/{username}/{messageid}':
     parameters:
       - schema:
@@ -327,56 +316,52 @@ paths:
         in: path
         required: true
     get:
-      summary: Your GET endpoint
+      summary: Restituisci il messaggio del cliente
       tags: []
       responses:
         '200':
           description: OK
           content:
-            application/json:
+            application/vnd.api+json:
               schema:
                 description: ''
                 type: object
                 properties:
                   data:
                     type: object
+                    required:
+                      - body
+                      - date
                     properties:
-                      sender:
-                        type: string
-                        minLength: 1
                       body:
                         type: string
                         minLength: 1
                       date:
                         type: string
                         minLength: 1
-                    required:
-                      - sender
-                      - body
-                      - date
+                      id:
+                        type: integer
                   links:
                     type: object
-                    properties:
-                      self:
-                        type: string
-                        minLength: 1
-                      next:
-                        type: string
-                        minLength: 1
-                      prev:
-                        type: string
-                        minLength: 1
                     required:
                       - self
                       - next
                       - prev
+                    properties:
+                      self:
+                        type: string
+                        minLength: 1
+                        description: Link al messaggio corrente
+                      next:
+                        type: string
+                        minLength: 1
+                        description: Link a messaggio successivo in senso temporale
+                      prev:
+                        type: string
+                        minLength: 1
+                        description: Link a messaggio precedente in senso temporale
                   meta:
                     type: object
-                    properties:
-                      id:
-                        type: number
-                    required:
-                      - id
                 required:
                   - data
                   - links
@@ -398,16 +383,13 @@ paths:
           description: Bad Request
         '406':
           description: Not Acceptable
-        '415':
-          description: Unsupported Media Type
-          content:
-            application/json:
-              schema:
-                type: object
-                properties: {}
       operationId: get-message-username-messageid
       security:
         - tokenSessione: []
+      description: |-
+        È la risorsa che, a fronte di una richiesta HTTP nella cui intestazione vi è un `token` identificativo valido, restituisce il messaggio con id pari al parametro di query `messageid` inviato al cliente il cui username è pari al parametro di query `username`.
+
+        Il body della richiesta e della risposta HTTP è di tipo `application/vnd.api+json` in quanto l'API prontogramAPI è al livello 3 di modello di maturità di Richardson: nella risposta sono presenti anche i campi `links` per permettere l'esplorazione dinamica, come richiesto da RMML3.
 components:
   securitySchemes:
     tokenSessione:
