@@ -115,7 +115,7 @@ paths:
               examples:
                 Esempio 1:
                   value:
-                    token: YNgz+nzCt3jlSXV3
+                    token: bWFnZ2llOnN1bW1lcnM=
         '400':
           description: Bad Request
         '500':

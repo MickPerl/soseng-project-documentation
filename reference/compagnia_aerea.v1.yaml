@@ -3,7 +3,8 @@ info:
   title: compagnia_aerea.v1
   version: '1.0'
 servers:
-  - url: 'http://localhost:3000'
+  - url: 'https://stoplight.io/mocks/soseng-unibo/soseng-project-documentation/7424067'
+    description: testing
 paths:
   /flights:
     get:
@@ -185,6 +186,7 @@ components:
         - emailVerified
   securitySchemes:
     companytoken:
-      name: abcd1234!@
+      name: abcd12!
       type: apiKey
       in: header
+      description: ''

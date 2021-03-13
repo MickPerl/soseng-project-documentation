@@ -55,6 +55,7 @@ paths:
                   transaction:
                     id: abcd!12
                     date: '2020-03-05, 12:06 CET'
+      description: 'Authorization: API Key - 1 abcd1234!@'
   /link:
     parameters: []
     get:

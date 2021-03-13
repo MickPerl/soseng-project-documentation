@@ -125,6 +125,8 @@ paths:
       summary: ''
       operationId: post-createmessage
       responses:
+        '200':
+          description: OK
         '400':
           description: Bad Request
         '401':
