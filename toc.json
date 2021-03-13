@@ -69,8 +69,8 @@
           "items": [
             {
               "type": "item",
-              "title": "Compagnia-trasporto",
-              "uri": "docs/2-workflow-artefatti.md"
+              "title": "Compagnia di trasporto",
+              "uri": "docs/6-compagnia_trasporto.md"
             }
           ]
         }
