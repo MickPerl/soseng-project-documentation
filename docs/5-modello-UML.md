@@ -26,8 +26,8 @@ Per una maggiore chiarezza, articoliamo anche la trattazione sul modello UML nel
 > - *operazione*
 
 ## Registrazione interessi degli utenti
-![Modello UML con profilo TinySOA](https://github.com/MickPerl/soseng-project-documentation/blob/master/assets/images/UML_registra_interessi.png?raw=true
- "Modello UML relativo alla registrazione degli interessi degli utenti")
+[![Modello UML con profilo TinySOA](https://github.com/MickPerl/soseng-project-documentation/blob/master/assets/images/UML_registra_interessi.png?raw=true
+ "Modello UML relativo alla registrazione degli interessi degli utenti")](https://github.com/MickPerl/soseng-project-documentation/blob/master/assets/images/UML_registra_interessi.png?raw=true)
 
 In questa parte, le capability essenziali sono quelle di ACMESky:
 - `MemorizzazioneInteressi` rende persistenti gli interessi registrati ed è esposta dall'interfaccia **salvataggioInteressiInterno**, la quale presenta l'operazione *inviaInteressi* che viene invocata internamente da ACMESky per rendere persistenti gli interessi;
@@ -35,8 +35,8 @@ In questa parte, le capability essenziali sono quelle di ACMESky:
   - questa capability necessita delle interfacce **salvataggioInteressiInterno** di cui sopra e **invioAck** del Cliente, in quanto, per finalizzare la registrazione degli interessi, ne deve notificare all'utente l'esito della ricezione e deve renderli persistenti.
 
 ## Richiesta e inoltro delle offerte
-![Modello UML con profilo TinySOA](https://github.com/MickPerl/soseng-project-documentation/blob/master/assets/images/UML_richiesta_inoltro.png?raw=true
- "Modello UML relativo alla richiesta e all'inoltro delle offerte")
+[![Modello UML con profilo TinySOA](https://github.com/MickPerl/soseng-project-documentation/blob/master/assets/images/UML_richiesta_inoltro.png?raw=true
+ "Modello UML relativo alla richiesta e all'inoltro delle offerte")](https://github.com/MickPerl/soseng-project-documentation/blob/master/assets/images/UML_richiesta_inoltro.png?raw=true)
 Questa parte attiene alle seguenti attività:
 1. la richiesta delle offerte attive alle compagnie aeree da parte di ACMESky;
 2. la ricezione e il salvataggio delle offerte da parte di ACMESky;
@@ -59,8 +59,8 @@ Per distinguere un'offerta last minute da una ordinaria, abbiamo previsto nell'o
 
 ## Acquisto offerta
 
-![Modello UML con profilo TinySOA](https://raw.githubusercontent.com/MickPerl/soseng-project-documentation/master/assets/images/UML_acquista_offerta.png
- "Modello UML relativo alla richiesta e all'inoltro delle offerte")
+[![Modello UML con profilo TinySOA](https://raw.githubusercontent.com/MickPerl/soseng-project-documentation/master/assets/images/UML_acquista_offerta.png
+ "Modello UML relativo alla richiesta e all'inoltro delle offerte")](https://raw.githubusercontent.com/MickPerl/soseng-project-documentation/master/assets/images/UML_acquista_offerta.png)
 
 Questa parte attiene alle seguenti attività:
 1. la ricezione del codice di ACMESky e il controllo della sua validità;
