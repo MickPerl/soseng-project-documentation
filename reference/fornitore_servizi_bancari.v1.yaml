@@ -1,8 +1,8 @@
 openapi: 3.0.0
 info:
-  title: servizi_bancari.v1
+  title: serviziBancariAPI
   version: '1.0'
-  description: ''
+  description: È l'API Restful offerta dal *fornitore dei servizi bancari* che rende accessibile la capability di generazione di un link di pagamento con certi parametri e di ricevere dati relativi al pagamento di un cliente.
 servers:
   - url: 'https://stoplight.io/mocks/soseng-unibo/soseng-project-documentation/7424070'
     description: testing
@@ -10,7 +10,7 @@ paths:
   /paymentdata:
     parameters: []
     post:
-      summary: ''
+      summary: Ricevi dati di pagamento
       operationId: post-paymentdata
       responses:
         '200':
@@ -46,7 +46,7 @@ paths:
                     date:
                       type: string
             examples:
-              Esempio 1:
+              Esempio:
                 value:
                   card_number: 1234123412341234
                   expiration:
@@ -57,11 +57,11 @@ paths:
                   transaction:
                     id: abcd!12
                     date: '2020-03-05, 12:06 CET'
-      description: 'Authorization: API Key - 1 abcd1234!@'
+      description: È la risorsa che permette al cliente intenzionato ad acquistare un'offerta di inviare al fornitore dei servizi bancari il pagamento corrispondente.
   /link:
     parameters: []
     get:
-      summary: ''
+      summary: Genera link di pagamento
       operationId: get-link
       responses:
         '200':
@@ -74,7 +74,7 @@ paths:
                   link:
                     type: string
               examples:
-                example-1:
+                Esempio:
                   value:
                     link: payflight.me/123ayshgga
         '400':
@@ -96,66 +96,30 @@ paths:
                       type: number
                     currency:
                       type: string
-                id_flight:
+                offer_code:
                   type: string
-                  description: identificatore biglietto che poi passerà alla compagnia aerea nel notificarle il pagamento
-                air_company:
+                  description: |-
+                    Codice dell'offerta che il cliente intende acquistare: in dettaglio, questo codice non è quello identificante la coppia offerta - cliente, bensì è quello assegnato, in principio, all'offerta dalla compagnia aerea che l'ha attivata, ancor prima di comunicarla ad ACMESky.
+
+                    Quando il fornitore dei servizi bancari inoltrerà la quota del pagamento del cliente alla compagnia aerea, le invierà anche questo codice per comunicarle l'offerta di cui le sta inviando il pagamento.
+                airline:
                   type: string
+                  description: 'Compagnia aerea che ha attivato l''offerta per il cui pagamento si chiede la generazione del link: servirà al fornitore dei servizi bancari per inoltrarle la quota spettante.'
             examples:
-              example-1:
+              Esempio:
                 value:
                   amount:
                     value: 100
                     currency: €
-                  id_flight: abcd123
-                  air_company: rayflight
+                  offer_code: abcd123
+                  airline: rayflight
         description: ''
+      description: 'È la risorsa che, a fronte di una richiesta HTTP nella cui intestazione vi è un `token` identificativo valido, restituisce un link di pagamento relativo all''offerta specificata.'
 components:
-  schemas:
-    User:
-      title: User
-      type: object
-      description: ''
-      x-examples:
-        Alice Smith:
-          id: 142
-          firstName: Alice
-          lastName: Smith
-          email: alice.smith@gmail.com
-          dateOfBirth: '1997-10-31'
-          emailVerified: true
-          signUpDate: '2019-08-24'
-      properties:
-        id:
-          type: integer
-          description: Unique identifier for the given user.
-        firstName:
-          type: string
-        lastName:
-          type: string
-        email:
-          type: string
-          format: email
-        dateOfBirth:
-          type: string
-          format: date
-          example: '1997-10-31'
-        emailVerified:
-          type: boolean
-          description: Set to true if the user's email has been verified.
-        createDate:
-          type: string
-          format: date
-          description: The date that the user was created.
-      required:
-        - id
-        - firstName
-        - lastName
-        - email
-        - emailVerified
+  schemas: {}
   securitySchemes:
     apikey:
       name: abcd12!
       type: apiKey
       in: header
-      description: Per permettere solo ad acmesky
+      description: Questo schema di sicurezza è stato impostato al fine di permettere esclusivamente ad ACMESky di richiedere alla banca la generazione del link di pagamento per una certa offerta.

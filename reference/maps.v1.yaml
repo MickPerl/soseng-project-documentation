@@ -108,7 +108,7 @@ paths:
                   token:
                     type: string
               examples:
-                Esempio 1:
+                Esempio:
                   value:
                     token: bWFnZ2llOnN1bW1lcnM=
         '400':
@@ -126,7 +126,7 @@ paths:
                 password:
                   type: string
             examples:
-              Esempio 1:
+              Esempio:
                 value:
                   username: Mario
                   password: Albatros12

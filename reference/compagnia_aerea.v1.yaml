@@ -1,14 +1,15 @@
 openapi: 3.0.0
 info:
-  title: compagnia_aerea.v1
+  title: compagniaAereaAPI
   version: '1.0'
+  description: È l'API Restful offerta dalla compagnia aerea che permette di fruire alla capability di restituire le offerte attive e di riceve la quota del pagamento del cliente.
 servers:
   - url: 'https://stoplight.io/mocks/soseng-unibo/soseng-project-documentation/7424067'
     description: testing
 paths:
   /flights:
     get:
-      summary: Your GET endpoint
+      summary: Restituisci le offerte attive
       tags: []
       responses:
         '200':
@@ -21,20 +22,16 @@ paths:
                 properties:
                   flights:
                     type: array
-                    uniqueItems: true
-                    minItems: 1
+                    uniqueItems: false
                     items:
                       type: object
                       properties:
                         departure-from:
                           type: string
-                          minLength: 1
                         takeoff:
                           type: string
-                          minLength: 1
                         destination:
                           type: string
-                          minLength: 1
                         price:
                           type: object
                           properties:
@@ -42,19 +39,13 @@ paths:
                               type: number
                             currency:
                               type: string
-                        id:
+                        offer_code:
                           type: string
-                      required:
-                        - departure-from
-                        - takeoff
-                        - destination
-                        - price
+                          description: Codice identificativo dell'offerta
                   companyname:
                     type: string
-                required:
-                  - flights
               examples:
-                example-1:
+                Esempio:
                   value:
                     flights:
                       - departure-from: BLQ
@@ -63,15 +54,15 @@ paths:
                         price:
                           value: 100
                           currency: €
-                        id: ryan253
+                        offer_code: ryan253
                     companyname: ryanflights
         '500':
           description: Internal Server Error
       operationId: get-flights
-      description: Restituisce tutte le offerte di voli attive
+      description: È la risorsa che restituisce tutte le offerte di voli attive.
   /notifypayment:
     post:
-      summary: ''
+      summary: Ricevi pagamento
       operationId: post-notifypayment
       responses:
         '200':
@@ -85,54 +76,35 @@ paths:
               description: ''
               type: object
               properties:
-                flight_id:
+                offer_code:
                   type: string
-                  minLength: 1
-                  description: identificatore biglietto
-                client:
+                  description: Codice identificativo dell'offerta
+                customer:
                   type: object
-                  required:
-                    - name
-                    - email
                   properties:
                     name:
                       type: string
-                      minLength: 1
                     email:
                       type: string
-                      minLength: 1
                 amount_payed:
                   type: object
-                  required:
-                    - value
-                    - currency
                   properties:
                     value:
                       type: number
                     currency:
                       type: string
-                      minLength: 1
                 transaction:
                   type: object
-                  required:
-                    - date
-                    - id
                   properties:
                     date:
                       type: string
-                      minLength: 1
                     id:
                       type: number
-              required:
-                - flight_id
-                - client
-                - amount_payed
-                - transaction
             examples:
-              example-1:
+              Esempio:
                 value:
-                  flight_id: ryan253
-                  client:
+                  offer_code: ryan253
+                  customer:
                     name: Mario Rossi
                     email: mariorossi@gmail.com
                   amount_payed:
@@ -141,52 +113,13 @@ paths:
                   transaction:
                     date: '2020-05-22, 13.45PM, CET'
                     id: 2542
+        description: ''
+      description: È la risorsa che permette al fornitore dei servizi bancari di inviare alla compagnia aerea la quota del pagamento ricevuto dal cliente per l'acquisto dell'offerta.
 components:
-  schemas:
-    User:
-      title: User
-      type: object
-      description: ''
-      x-examples:
-        Alice Smith:
-          id: 142
-          firstName: Alice
-          lastName: Smith
-          email: alice.smith@gmail.com
-          dateOfBirth: '1997-10-31'
-          emailVerified: true
-          signUpDate: '2019-08-24'
-      properties:
-        id:
-          type: integer
-          description: Unique identifier for the given user.
-        firstName:
-          type: string
-        lastName:
-          type: string
-        email:
-          type: string
-          format: email
-        dateOfBirth:
-          type: string
-          format: date
-          example: '1997-10-31'
-        emailVerified:
-          type: boolean
-          description: Set to true if the user's email has been verified.
-        createDate:
-          type: string
-          format: date
-          description: The date that the user was created.
-      required:
-        - id
-        - firstName
-        - lastName
-        - email
-        - emailVerified
+  schemas: {}
   securitySchemes:
     companytoken:
       name: abcd12!
       type: apiKey
       in: header
-      description: ''
+      description: Schema di sicurezza per permettere solo ai clienti opportunatamente autenticati di inviare il pagamento.

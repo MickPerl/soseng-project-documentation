@@ -11,21 +11,11 @@ paths:
     get:
       summary: Restituisci tutti i messaggi
       tags: []
-      requestBody:
-        content:
-          application/vnd.api+json:
-            schema:
-              description: ''
-              type: object
-            examples:
-              example-1: {}
-          application/xml:
-            schema:
-              type: object
-              properties: {}
-        description: 'Il body della richiesta e della risposta HTTP è di tipo `application/vnd.api+json` in quanto l''API prontogramAPI è al livello 3 di modello di maturità di Richardson: nella risposta sono presenti anche i campi `links` per permettere l''esplorazione dinamica, come richiesto da RMML3.'
       operationId: post-allmessage
-      description: 'È la risorsa che, a fronte di una richiesta HTTP nella cui intestazione vi è un `token` identificativo valido, restituisce tutti i messaggi (in blocchi di cardinalità 20) accessibili al fruitore (utente o ACMESky) identificato da quel token: in dettaglio, l''utente ha accesso solo ai messaggi di cui è destinatario, mentre ACMESky ha accesso a tutti i messaggi che ha inoltrato ai suoi utenti mediante Prontogram (potrebbe richiederli per fini statistici, ad esempio).'
+      description: |-
+        È la risorsa che, a fronte di una richiesta HTTP nella cui intestazione vi è un `token` identificativo valido, restituisce tutti i messaggi (in blocchi di cardinalità 20) accessibili al fruitore (utente o ACMESky) identificato da quel token: in dettaglio, l'utente ha accesso solo ai messaggi di cui è destinatario, mentre ACMESky ha accesso a tutti i messaggi che ha inoltrato ai suoi utenti mediante Prontogram (potrebbe richiederli per fini statistici, ad esempio).
+
+        l body della risposta HTTP è di tipo `application/vnd.api+json` in quanto l'API prontogramAPI è al livello 3 di modello di maturità di Richardson: con la risposta sono restituiti anche i campi `links` per permettere l'esplorazione dinamica, come richiesto da RMML3.
       security:
         - tokenSessione: []
       responses:
@@ -58,13 +48,12 @@ paths:
                         message:
                           type: object
                           properties:
-                            body:
-                              type: string
-                              description: Descrizione dell'offerta e codice identificativo della coppia cliente - offerta
+                            offer:
+                              $ref: '#/components/schemas/offerMessage'
                             receiver:
                               type: string
-                            data:
-                              $ref: ./compagnia_trasporto.v1.yaml#/components/schemas/data
+                            date:
+                              type: string
                             id:
                               type: integer
                         links:
@@ -97,7 +86,9 @@ paths:
                           next: /message/mariorossi/1
                           prev: /message/mariorossi/0
                       - message:
-                          body: 'nuova offerta, codice 1235'
+                          offer:
+                            description: 'Roma - Berlino, Classe Premium'
+                            code: '1234'
                           receiver: mariorossi
                           date: '2020-03-05, 12:06 CET'
                         links:
@@ -112,7 +103,9 @@ paths:
                       prev: /message/mariorossi/3
                     data:
                       - message:
-                          body: 'nuova offerta, codice 1234'
+                          offer:
+                            description: 'Roma - Berlino, Classe Premium'
+                            code: '1234'
                           receiver: mariorossi
                           date: '2020-03-02, 16:06 CET'
                         links:
@@ -159,15 +152,16 @@ paths:
                   properties:
                     receiver:
                       type: string
-                    body:
-                      type: string
-                      description: Descrizione dell'offerta e codice identificativo della coppia cliente - offerta
+                    offer:
+                      $ref: '#/components/schemas/offerMessage'
             examples:
-              Esempio di messaggio:
+              Esempio:
                 value:
                   data:
                     receiver: Mario rossi
-                    body: 'Nuova offerta. Inserisci codice sul sito: 1234'
+                    offer:
+                      description: 'Roma - Berlino, Classe Premium'
+                      code: '1234'
         description: Il body della richiesta HTTP è di tipo `application/vnd.api+json` in quanto l'API prontogramAPI è al livello 3 di modello di maturità di Richardson.
   '/message/{username}':
     parameters:
@@ -176,6 +170,7 @@ paths:
         name: username
         in: path
         required: true
+        description: Username dell'utente
     get:
       summary: Restituisci i primi 10 messaggi del cliente
       tags: []
@@ -200,6 +195,7 @@ paths:
         È la risorsa che, a fronte di una richiesta HTTP nella cui intestazione vi è un `token` identificativo valido, restituisce i primi 20 messaggi inviati al cliente il cui username è pari al parametro di query `username`.
 
         In caso la richiesta HTTP abbia esito positivo, la risposta è un reindirizzamento alla risorsa `/message/{username}/from/0`
+      parameters: []
   '/message/{username}/from/{messageid}':
     parameters:
       - schema:
@@ -207,11 +203,13 @@ paths:
         name: username
         in: path
         required: true
+        description: Username dell'utente
       - schema:
           type: string
         name: messageid
         in: path
         required: true
+        description: Id del messaggio
     get:
       summary: Restituisci 10 messaggi del cliente
       tags: []
@@ -234,11 +232,10 @@ paths:
                         items:
                           type: object
                           properties:
-                            body:
+                            offer:
+                              $ref: '#/components/schemas/offerMessage'
+                            date:
                               type: string
-                              description: Descrizione dell'offerta e codice identificativo della coppia cliente - offerta
-                            data:
-                              $ref: ./compagnia_trasporto.v1.yaml#/components/schemas/data
                             links:
                               type: object
                               description: Link a livello dei singoli messaggi
@@ -268,19 +265,23 @@ paths:
                         type: string
                         description: Link al blocco precedente in senso temporale
               examples:
-                Esempio 1:
+                Esempio:
                   value:
                     data:
                       message:
                         - sender: ACMEsky
-                          body: 'Nuova offerta, inserisci codice 1234'
+                          offer:
+                            description: 'Roma - Berlino, Classe Premium'
+                            code: '1234'
                           date: '2021-03-04, 21:25 CET'
                           links:
                             self: /message/mariorossi/0
                             next: /message/mariorossi/1
                             prev: /message/mariorossi/0
                         - sender: ACMEsky
-                          body: 'Nuova offerta, inserisci codice 4321'
+                          body:
+                            description: 'Roma - Parigi, Classe Base'
+                            code: '5678'
                           date: '2021-03-04, 21:25 CET'
                           links:
                             self: /message/mariorossi/1
@@ -310,11 +311,13 @@ paths:
         name: username
         in: path
         required: true
+        description: Username dell'utente
       - schema:
           type: string
         name: messageid
         in: path
         required: true
+        description: Id del messaggio
     get:
       summary: Restituisci il messaggio del cliente
       tags: []
@@ -329,49 +332,33 @@ paths:
                 properties:
                   data:
                     type: object
-                    required:
-                      - body
-                      - date
                     properties:
-                      body:
-                        type: string
-                        minLength: 1
+                      offer:
+                        $ref: '#/components/schemas/offerMessage'
                       date:
                         type: string
-                        minLength: 1
                       id:
                         type: integer
                   links:
                     type: object
-                    required:
-                      - self
-                      - next
-                      - prev
                     properties:
                       self:
                         type: string
-                        minLength: 1
                         description: Link al messaggio corrente
                       next:
                         type: string
-                        minLength: 1
                         description: Link a messaggio successivo in senso temporale
                       prev:
                         type: string
-                        minLength: 1
                         description: Link a messaggio precedente in senso temporale
-                  meta:
-                    type: object
-                required:
-                  - data
-                  - links
-                  - meta
               examples:
-                example 1:
+                Esempio:
                   value:
                     data:
                       sender: ACMEsky
-                      body: 'Nuova offerta, inserisci codice 1234'
+                      offer:
+                        description: 'Roma - Berlino, Classe Premium'
+                        code: '1234'
                       date: '2021-03-04, 21:25 CET'
                     links:
                       self: /message/mariorossi/1
@@ -401,3 +388,15 @@ components:
           refreshUrl: ''
           scopes: {}
       description: Abbiamo utilizzato OAuth2 come schema di sicurezza perché consente di creare un token di sessione che permette agli utenti di essere identificati da Prontogram e di fruire dei servizi che espone.
+  schemas:
+    offerMessage:
+      title: offerMessage
+      type: object
+      description: Parte del messaggio relativa all'offerta.
+      properties:
+        code:
+          type: string
+          description: Codice identificativo della coppia cliente destinatario - offerta
+        description:
+          type: string
+          description: Breve descrizione dell'offerta

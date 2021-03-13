@@ -25,6 +25,8 @@ Questa parte attiene alle seguenti attività:
 ## Ricezione e inoltro delle offerte LM
 
 ## Acquisto offerta
+Assunzione mezzi compagnie trasporti infiniti
+
 
 Questa parte attiene alle seguenti attività:
 1. la ricezione del codice di ACMESky e il controllo della sua validità;

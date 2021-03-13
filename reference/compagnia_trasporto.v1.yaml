@@ -1,14 +1,15 @@
 openapi: 3.0.0
 info:
-  title: compagnia_trasporto
+  title: compagniaTrasportoAPI
   version: '1.0'
+  description: È l'API SOAP offerta dalla compagnia di trasporto che racchiude la capability di prenotare un servizio di trasporto per il cliente dal suo domicilio all'aeroporto da cui parte l'aereo di suo interesse.
 servers:
   - url: 'https://stoplight.io/mocks/soseng-unibo/soseng-project-documentation/7905322'
     description: testing
 paths:
   /prenota:
     post:
-      summary: Create New User
+      summary: Prenota un servizio di trasporto
       operationId: post-user
       requestBody:
         content:
@@ -28,7 +29,7 @@ paths:
                 orario:
                   $ref: '#/components/schemas/orario'
             examples:
-              Esempio 1:
+              Esempio:
                 value: |-
                   <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:null="null.xsd">
                      <soapenv:Header/>
@@ -63,7 +64,7 @@ paths:
                      </soapenv:Body>
                   </soapenv:Envelope>
         description: Post the necessary fields for the API to create a new user.
-      description: Create a new user.
+      description: 'È la risorsa che permette di prenotare un servizio di trasporto il cui luogo di partenza, di arrivo, data e ora sono specificati nel corpo della richiesta.'
       parameters:
         - schema:
             type: string
@@ -73,6 +74,10 @@ paths:
       responses:
         '200':
           description: OK
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
     parameters: []
 components:
   schemas:
