@@ -19,6 +19,12 @@ Per una maggiore chiarezza, articoliamo anche la trattazione sul modello UML nel
 - Ricezione delle offerte LM e inoltro;
 - Acquisto del biglietto.
 
+<!-- theme: warning -->
+> **Convenzioni adottate nella formattazione**:
+> - `capability`
+> - **interfaccia**
+> - *operazione*
+
 ## Registrazione interessi degli utenti
 ![Modello UML con profilo TinySOA](https://github.com/MickPerl/soseng-project-documentation/blob/master/assets/images/UML_registra_interessi.png?raw=true
  "Modello UML relativo alla registrazione degli interessi degli utenti")
@@ -44,7 +50,7 @@ Le capability coinvolte sono:
 - `GestioneInteressiOfferte` è la capability di ACMESky, consistente nella ricezione e memorizzazione delle offerte ricevute dalle compagnie aeree, nella ricerca di match con gli interessi specificati dagli utenti e nella generazione di un codice per identificare la coppia offerta-utente: in dettaglio, le operazioni alla base sono esposte da due interfacce diverse, **InvioOfferte** che rende accessibile dall'esterno l'operazione *inviaOfferte* e **InteressiOfferteInterno** che rende accessibile internamente le operazioni *salvaOfferte*, *cercaMatchOfferteInteressi* e *generaCodici*;
   - dipende dalle interfacce **InoltroCodice** di Prontogram e **RichiestaOfferte** della compagnia aerea, in quanto, per finalizzarsi, deve richiedere le offerte alle compagnie aeree, invocando l'operazione *richiestaOfferte* dall'interfaccia **RichiestaOfferte** che espone la capability `RestituzioneOfferte` delle compagnie aeree, e deve inoltrare i codici generati ai clienti corrispondenti mediante l'interfaccia di Prontogram;  
 - `InoltroCodice` è la capability di Prontogram tramite cui inoltra agli specifici clienti i codici ricevuti da ACMESky ed è esposta dall'interfaccia **InoltroCodice**, la quale presenta l'operazione *inoltraCodice* che viene invocata da ACMESky per rendere avviare l'inoltro dei codici ai clienti corrispondenti;
-  - dipende dall'interfaccia `InvioDati` del cliente in quanto, per finalizzarsi, deve invocare l'operazione *inviaCodice* tramite cui invia il codice al cliente.
+  - dipende dall'interfaccia **InvioDati** del cliente in quanto, per finalizzarsi, deve invocare l'operazione *inviaCodice* tramite cui invia il codice al cliente.
 
 ## Ricezione e inoltro delle offerte LM
 Questa parte, ai fini del modello UML in oggetto, è ricompresa nella parte precedente in quanto, le compagnie aeree che intendono comunicare delle offerte last minute ad ACMESky invocano l'operazione *inviaOfferte* dell'interfaccia **InvioOfferte** di ACMESky, ossia la stessa operazione invocata quando le compagnie aeree restituiscono le offerte attive on demand.
@@ -57,17 +63,28 @@ Per distinguere un'offerta last minute da una ordinaria, abbiamo previsto nell'o
  "Modello UML relativo alla richiesta e all'inoltro delle offerte")
 
 Questa parte attiene alle seguenti attività:
-1. 
-la ricezione del codice di ACMESky e il controllo della sua validità;
-la richiesta del link di pagamento al fornitore dei servizi bancari da parte di ACMESky e la sua ricezione di quest'ultimo;
-l'invio del link di pagamento al cliente da parte di ACMESky;
-l'invio dei dati di pagamento al fornitore dei servizi bancari da parte del cliente
-la verifica dei dati di pagamento;
-l'invio della notifica circa l'esito del pagamento ai clienti da parte dei fornitori dei servizi bancari;
-l'invio dei fornitori dei servizi bancari della quota del pagamento ad ACMESky;
-l'invio dei fornitori dei servizi bancari della quota del pagamento alla compagnia aerea;
-l'invio del biglietto al cliente da parte della compagnia aerea;
-la richiesta di ACMESky al fornitore delle distanze circa la distanza tra
+1. la ricezione del codice di ACMESky e il controllo della sua validità;
+2. la richiesta del link di pagamento al fornitore dei servizi bancari da parte di ACMESky e la sua ricezione di quest'ultimo;
+3. l'invio del link di pagamento al cliente da parte di ACMESky;
+4. l'invio dei dati di pagamento al fornitore dei servizi bancari da parte del cliente
+5. la verifica dei dati di pagamento ad opera del fornitore dei servizi bancari;
+6. l'invio della notifica circa l'esito del pagamento ai clienti da parte dei fornitori dei servizi bancari;
+7. l'invio dei fornitori dei servizi bancari della quota del pagamento ad ACMESky;
+8. l'invio dei fornitori dei servizi bancari della quota del pagamento alla compagnia aerea;
+9. l'invio del biglietto al cliente da parte della compagnia aerea;
+10. la richiesta di ACMESky al fornitore delle distanze circa la distanza tra il domicilio dell'utente e l'aeroporto di partenza dell'aereo di suo interesse;
+11. la proposta del serivizio di trasporto al cliente da parte di ACMESky e la risposta del cliente;
+12. in caso l'utente accetti, la richiestadi ACMESky al fornitore delle distanze circa le distanze tra il domicilio dell'utente e le sedi delle compagnie di trasporto;
+13. la prenotazione di ACMESky di un servizio di trasporto;  
 
-
- 
+Le capability coinvolte sono:
+- `ControlloCodiceEPagamento` di ACMESky che le permette di ricevere il codice dall'utente, verificarne la validità, ricevere il link di pagamento dal fornitore di servizi bancari e ricevere la notifica dell'esito del pagamento; è esposta da diverse interfacce, quali **InvioCodice** che rende accessibile l'operazione *inviaCodice*, **ControlloCodiciEPagamentoInterno** che rende accessibile internamente *controlloCodice* e **InvioDaBanca** che rende accessibile *inviaLinkBanca*, *notificaSuccessoPagameto* e *notificaFallimentoPagamento*;
+  - dipende dalle interfacce **ServiziBancari** del Fornitore dei servizi bancari, in quanto ACMESky deve richiedere a questi ultimi la generazione del link di pagamento, **InvioDati** del cliente, in quanto deve inviargli il link di pagamento e **InvioAck** del cliente per comunicargli una notifica per l'esaurimento o incorrettezza del codice inviato;
+- `GestionePrenotazioneNavetta` di ACMESky che le permette di ricevere le distanze richieste e l'esito della proposta al cliente del servizio di traporto; è esposta dall'interfaccia **GestionePrenotazioneNavetta** che rende accessibile le operazioni *inviaDistanza*, *inviaAccettazioneTrasporto* e *inviaRifiutoTrasporto*;
+  - dipende dalle interfacce **CalcoloDistanze** del FornitoreDistanze che espone la capability `CalcoloDistanza`, in quanto deve richiedergli le distanze di interesse invocando *calcolaDistanza*, **InvioPropostaTrasporto** del cliente, in quanto deve potergli inviargli la proposta del servizio e **Prenotazione** della compagnia di traporto che espone `Prenotazione`, in quanto deve poter prenotarne il servizio, invocando *prenota*;
+- `GestionePagamento` di Fornitore dei servizi bancari che gli permette di generare il link di pagamento richiestogli da ACMESky e riceve il pagamento dal cliente; è esposta dall'interfaccia **ServiziBancari** che presenta le operazioni *inviaRichiestaGenerazioneLink* e *inviaPagamento*;
+  - dipende dalle interfacce **ServiziBancariInterno**, in quanto deve verificare i dati di pagamento invocando *verificaDati* e **InvioPagamento** della compagnia aerea, in quanto deve potergli recapitare la quota corrispondente;
+- `VerificaDatiPagamento` del fornitore dei servizi bancari che gli permette di verificare la validità dei dati di pagamento; è esposta da **ServiziBancariInterno** che presenta *verificaDati*;
+  - dipende dall'interfaccia **InvioAck** del cliente, in quanto deve notificargli l'esito del pagamento o l'esaurimento dei tentativi;
+- `RicezionePagamentoInvioBiglietto` della compagnia aerea che le permette di ricevere la quota del pagamento che gli spetta dal fornitore dei servizi bancari; è esposta da **InvioPagamento** che presenta *inviaPagamento*;
+  - dipende da **InvioBiglietto** del cliente, in quanto deve potergli inviare il biglietto, invocando l'operazione *inviaBiglietto*.
