@@ -7,8 +7,10 @@ Abbiamo poi verificato le condizioni di connectedness e quindi proiettato l'outp
 ## Coreografia
 La coreografia cui siamo giunti dopo numerosi confronti, riflessioni e iterazioni è presentata di seguito: 
 
+<code>id\_pn\_aside\_subscriber\_form\__form\_id_</code>
+
 ```javascript
-C ::= (<span style="text-decoration:overline">invio_interessi</span>: cliente --> acmesky)*
+C ::= (invio_interessi: cliente --> acmesky)*
 
 |
 
