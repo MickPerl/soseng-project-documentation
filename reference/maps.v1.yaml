@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: maps
+  title: fornitoreDistanzeAPI
   version: '1.0'
   description: 'È l''API RESTful offerta dal *Fornitore delle distanze geografiche* che, come suggerisce il nome, vi racchiude la capability di calcolare la distanza tra due posizioni geografiche.'
 servers:
@@ -54,7 +54,7 @@ paths:
           description: Bad Request
         '403':
           description: Forbidden
-      description: Risorsa che restituisce la distanza geografica tra due punti oppure le distanze geografiche tra un punto e ciascun punto di una lista.
+      description: È la risorsa che restituisce la distanza geografica tra due punti geografici oppure le distanze geografiche tra un punto e ciascun punto di una lista.
       requestBody:
         content:
           application/json:
@@ -64,18 +64,13 @@ paths:
               properties:
                 pointA:
                   type: string
-                  minLength: 1
                   description: Punto geografico di partenza
                 pointsB:
                   type: array
                   description: Array di punti geografici di destinazione
-                  uniqueItems: true
+                  uniqueItems: false
                   items:
                     type: string
-                    minLength: 1
-              required:
-                - pointA
-                - pointsB
             examples:
               Esempio richiesta semplice:
                 value:
@@ -100,7 +95,7 @@ paths:
         - Operazioni
   /registration:
     post:
-      summary: Registra nuovo utente
+      summary: Registra un nuovo utente
       operationId: post-registration
       responses:
         '200':
@@ -142,6 +137,6 @@ components:
     authorization:
       type: http
       scheme: basic
-      description: 'Questo schema di sicurezza richiede al client che nella richiesta HTTP passi anche l''header *Authorization* con le sue credenziali: lo abbiamo introdotto perché vogliamo che l''API `maps` sia fruibile solo da soggetti con cui il *Fornitore delle distanze geografiche* ha preso accordi (nel nostro caso le credenziali di accesso saranno date solo ad *ACMESky*).'
+      description: 'Questo schema di sicurezza richiede al client che nella richiesta HTTP passi anche l''header *Authorization* con le sue credenziali, nella forma di "Basic token": lo abbiamo introdotto perché vogliamo che l''API `maps` sia fruibile solo da soggetti con cui il *Fornitore delle distanze geografiche* ha preso accordi (nel nostro caso le credenziali di accesso saranno date solo ad *ACMESky*).'
 security:
   - API Key - 1: []

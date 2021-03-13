@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: prontogramAPI
   version: '1.0'
-  description: È l'API offerta dall'applicazione di messaggistica *Prontogram* che vi racchiude la capability di inoltrare i messaggi circa le offerte inviate da ACMESky ai clienti interessati.
+  description: È l'API Restful offerta dall'applicazione di messaggistica *Prontogram* che vi racchiude la capability di inoltrare i messaggi circa le offerte inviate da ACMESky ai clienti interessati.
 servers:
   - url: 'https://soseng-unibo.stoplight.io/mocks/soseng-unibo/soseng-project-documentation/6636887'
     description: testing
