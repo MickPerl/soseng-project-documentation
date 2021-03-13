@@ -9,6 +9,8 @@ Gli artefatti in questione sono:
 - **Entity**: una singola attività che può far uso di utility;
 - **Utility**: un intero processo scollegato dal dominio
 
+<a href="https://github.com/MickPerl/soseng-project-documentation/blob/master/assets/images/UML_totale.png?raw=true" target="_blank">example</a>
+
 Il modello UML cui siamo giunti è qui riportato:
 [![Modello UML con profilo TinySOA](https://github.com/MickPerl/soseng-project-documentation/blob/master/assets/images/UML_totale.png?raw=true
  "Modello UML dell'architettura totale")](https://github.com/MickPerl/soseng-project-documentation/blob/master/assets/images/UML_totale.png?raw=true){:target="_blank"}
