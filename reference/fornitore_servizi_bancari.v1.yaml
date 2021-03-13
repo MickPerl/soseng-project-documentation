@@ -2,8 +2,10 @@ openapi: 3.0.0
 info:
   title: servizi_bancari.v1
   version: '1.0'
+  description: ''
 servers:
-  - url: 'http://localhost:3000'
+  - url: 'https://stoplight.io/mocks/soseng-unibo/soseng-project-documentation/7424070'
+    description: testing
 paths:
   /paymentdata:
     parameters: []
@@ -80,7 +82,7 @@ paths:
         '500':
           description: Internal Server Error
       security:
-        - API Key - 1: []
+        - apikey: []
       requestBody:
         content:
           application/json:
@@ -152,7 +154,7 @@ components:
         - email
         - emailVerified
   securitySchemes:
-    API Key - 1:
+    apikey:
       name: abcd12!
       type: apiKey
       in: header
