@@ -74,12 +74,9 @@ title: "Sotto-coreografia: richiesta_e_inoltro_offerte"
 richiesta_e_inoltro_offerte ::= ( (richiesta_offerte: acmesky --> compagnia_aerea_a ;
 risposta_offerte: compagnia_aerea_a --> acmesky) |   
 ... |
-(richiesta_offerte: acmesky --> compagnia_aerea_z ;
-risposta_offerte: compagnia_aerea_z --> acmesky) ) ; 
+(richiesta_offerte: acmesky --> compagnia_aerea_z ; risposta_offerte: compagnia_aerea_z --> acmesky) ) ; 
 1 + (invio_offerte: acmesky --> prontogram ;
-inoltro_offerte: prontogram --> cliente_1 |
-... |
-inoltro_offerte: prontogram --> cliente_n )
+inoltro_offerte: prontogram --> cliente_1 | ... | inoltro_offerte: prontogram --> cliente_n )
 ```
 
 ACMESky, quotidianamente, ripete la comunicazione `richiesta_offerte`, entro cui chiede ad una singola compagnia aerea che le restituisca tutte le offerte attive. A questa comunicazione, ne segue un'altra, `risposta_offerte`, con cui la compagnia aerea contattata invia ad ACMESky quanto richiestole.
@@ -105,15 +102,11 @@ title: "Sotto-coreografia: ricezione_e_inoltro_offerte_LM"
 ```javascript
 ricezione_e_inoltro_offerte_LM ::= (last_minute: compagnia_aerea_a --> acmesky ;
 1 + (invio_offerte_LM: acmesky --> prontogram ;
-inoltro_offerte_LM: prontogram --> cliente_1a |
-... |
-inoltro_offerte_LM: prontogram --> cliente_na) ) | 
+inoltro_offerte_LM: prontogram --> cliente_1a | ... | inoltro_offerte_LM: prontogram --> cliente_na) ) | 
 ... |
 (last_minute: compagnia_aerea_z --> acmesky ;
 1 + (invio_offerte_LM: acmesky --> prontogram ; 
-inoltro_offerte_LM: prontogram --> cliente_1z |
-... |
-inoltro_offerte_LM: prontogram --> cliente_nz) )
+inoltro_offerte_LM: prontogram --> cliente_1z | ... | inoltro_offerte_LM: prontogram --> cliente_nz) )
 ```
 
 Nell'ambito della comunicazione `last_minute`, una certa compagnia aerea invia ad ACMESky una sua offerta last-minute. Quindi, ACMESky verifica nuovamente la presenza di una corrispondenza tra il nuovo insieme di offerte memorizzate e le esigenze specificate dai suoi clienti fino a quel momento; a seconda che la verifica abbia esito positivo o meno, si eseguono le stesse comunicazioni di invio e inoltro delle offerte viste nella sezione precedente.
