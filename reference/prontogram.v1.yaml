@@ -10,7 +10,8 @@ paths:
   /message:
     get:
       summary: Restituisci tutti i messaggi
-      tags: []
+      tags:
+        - Risorse
       operationId: post-allmessage
       description: |-
         È la risorsa che, a fronte di una richiesta HTTP nella cui intestazione vi è un `token` identificativo valido, restituisce tutti i messaggi (in blocchi di cardinalità 20) accessibili al fruitore (utente o ACMESky) identificato da quel token: in dettaglio, l'utente ha accesso solo ai messaggi di cui è destinatario, mentre ACMESky ha accesso a tutti i messaggi che ha inoltrato ai suoi utenti mediante Prontogram (potrebbe richiederli per fini statistici, ad esempio).
@@ -175,7 +176,8 @@ paths:
         description: Username dell'utente
     get:
       summary: Restituisci i primi 10 messaggi del cliente
-      tags: []
+      tags:
+        - Risorse
       responses:
         '308':
           description: Permanent Redirect (experiemental)
@@ -214,7 +216,8 @@ paths:
         description: Id del messaggio
     get:
       summary: Restituisci 10 messaggi del cliente
-      tags: []
+      tags:
+        - Risorse
       responses:
         '200':
           description: OK
@@ -322,7 +325,8 @@ paths:
         description: Id del messaggio
     get:
       summary: Restituisci il messaggio del cliente
-      tags: []
+      tags:
+        - Risorse
       responses:
         '200':
           description: OK
@@ -402,5 +406,3 @@ components:
         description:
           type: string
           description: Breve descrizione dell'offerta
-tags:
-  - name: Panoramica

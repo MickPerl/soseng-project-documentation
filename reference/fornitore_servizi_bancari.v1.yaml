@@ -58,6 +58,8 @@ paths:
                     id: abcd!12
                     date: '2020-03-05, 12:06 CET'
       description: È la risorsa che permette al cliente intenzionato ad acquistare un'offerta di inviare al fornitore dei servizi bancari il pagamento corrispondente.
+      tags:
+        - Risorse
   /link:
     parameters: []
     get:
@@ -115,6 +117,8 @@ paths:
                   airline: rayflight
         description: ''
       description: 'È la risorsa che, a fronte di una richiesta HTTP nella cui intestazione vi è un `token` identificativo valido, restituisce un link di pagamento relativo all''offerta specificata.'
+      tags:
+        - Risorse
 components:
   schemas: {}
   securitySchemes:

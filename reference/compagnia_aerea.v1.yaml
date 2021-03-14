@@ -10,7 +10,8 @@ paths:
   /flights:
     get:
       summary: Restituisci le offerte attive
-      tags: []
+      tags:
+        - Risorse
       responses:
         '200':
           description: OK
@@ -115,6 +116,8 @@ paths:
                     id: 2542
         description: ''
       description: È la risorsa che permette al fornitore dei servizi bancari di inviare alla compagnia aerea la quota del pagamento ricevuto dal cliente per l'acquisto dell'offerta.
+      tags:
+        - Risorse
 components:
   schemas: {}
   securitySchemes:
