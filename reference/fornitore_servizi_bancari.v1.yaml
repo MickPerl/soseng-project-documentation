@@ -60,6 +60,10 @@ paths:
       description: È la risorsa che permette al cliente intenzionato ad acquistare un'offerta di inviare al fornitore dei servizi bancari il pagamento corrispondente.
       tags:
         - Risorse
+      security:
+        - apikey: []
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationAPIKey'
   /link:
     parameters: []
     get:
@@ -119,6 +123,43 @@ paths:
       description: 'È la risorsa che, a fronte di una richiesta HTTP nella cui intestazione vi è un `token` identificativo valido, restituisce un link di pagamento relativo all''offerta specificata.'
       tags:
         - Risorse
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationAPIKey'
+  /registration:
+    post:
+      summary: Registra un nuovo utente
+      operationId: post-registration
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+              examples:
+                Esempio:
+                  value:
+                    token: bWFnZ2llOnN1bW1lcnM=
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+      description: È la risorsa che permette a chi intende interagire con il fornitore dei servizi bancari di ottenere l'APIKey per poter essere identificato e autorizzato.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ./maps.v1.yaml#/components/schemas/credentials
+            examples:
+              Esempio:
+                value:
+                  username: Mario
+                  password: 1245a5a
+      tags:
+        - Risorse
 components:
   schemas: {}
   securitySchemes:
@@ -127,3 +168,11 @@ components:
       type: apiKey
       in: header
       description: Questo schema di sicurezza è stato impostato al fine di permettere esclusivamente ad ACMESky di richiedere alla banca la generazione del link di pagamento per una certa offerta.
+  parameters:
+    AuthorizationAPIKey:
+      name: AuthorizationAPIKey
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Il valore deve essere il token che il cliente ha ricevuto durante la registrazione.

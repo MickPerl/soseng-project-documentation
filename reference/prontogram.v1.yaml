@@ -119,6 +119,8 @@ paths:
           description: Not Acceptable
         '415':
           description: Unsupported Media Type
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationOauth2'
     parameters:
       - required: true
   /createmessage:
@@ -139,7 +141,7 @@ paths:
           description: Unsupported Media Type
       description: 'È la risorsa che, a fronte di una richiesta HTTP nella cui intestazione vi è un `token` identificativo valido, invia un messaggio il cui corpo e destinatario sono quelli specificati nel body della richiesta HTTP.'
       parameters:
-        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/AuthorizationOauth2'
       security:
         - tokenSessione: []
       requestBody:
@@ -200,7 +202,8 @@ paths:
         È la risorsa che, a fronte di una richiesta HTTP nella cui intestazione vi è un `token` identificativo valido, restituisce i primi 20 messaggi inviati al cliente il cui username è pari al parametro di query `username`.
 
         In caso la richiesta HTTP abbia esito positivo, la risposta è un reindirizzamento alla risorsa `/message/{username}/from/0`
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationOauth2'
   '/message/{username}/from/{messageid}':
     parameters:
       - schema:
@@ -310,6 +313,8 @@ paths:
         È la risorsa che, a fronte di una richiesta HTTP nella cui intestazione vi è un `token` identificativo valido, restituisce i 10 messaggi successivi a quello con id pari al parametro di query `messageId` e inviati al cliente il cui username è pari al parametro di query `username`.
 
         Il body della richiesta e della risposta HTTP è di tipo `application/vnd.api+json` in quanto l'API prontogramAPI è al livello 3 di modello di maturità di Richardson: nella risposta sono presenti anche i campi `links` per permettere l'esplorazione dinamica, come richiesto da RMML3.
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationOauth2'
   '/message/{username}/{messageid}':
     parameters:
       - schema:
@@ -384,9 +389,11 @@ paths:
         È la risorsa che, a fronte di una richiesta HTTP nella cui intestazione vi è un `token` identificativo valido, restituisce il messaggio con id pari al parametro di query `messageid` inviato al cliente il cui username è pari al parametro di query `username`.
 
         Il body della richiesta e della risposta HTTP è di tipo `application/vnd.api+json` in quanto l'API prontogramAPI è al livello 3 di modello di maturità di Richardson: nella risposta sono presenti anche i campi `links` per permettere l'esplorazione dinamica, come richiesto da RMML3.
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationOauth2'
   /login:
     post:
-      summary: Autentica il cliente
+      summary: Autentica un cliente
       operationId: post-login
       responses:
         '200':
@@ -398,20 +405,30 @@ paths:
                 properties:
                   token:
                     type: string
+                  expiration_date:
+                    type: string
               examples:
                 Esempio:
                   value:
                     token: bWFnZ2llOnN1bW1lcnM=
+                    expiration_date: '2020-03-02, 16:06 CET'
         '400':
           description: Bad Request
         '500':
           description: Internal Server Error
-      description: È la risorsa che permette al cliente di ottenere il token tramite cui potrà essere identificato e autorizzato da Prontogram.
+      description: È la risorsa che permette al cliente o ad ACMESky di ottenere il token temporaneo tramite cui potranno essere identificati e autorizzati da Prontogram.
       requestBody:
         content:
           application/json:
             schema:
               $ref: ./maps.v1.yaml#/components/schemas/credentials
+            examples:
+              Esempio:
+                value:
+                  username: Mario
+                  password: st1222a2aring
+      tags:
+        - Risorse
 components:
   securitySchemes:
     tokenSessione:
@@ -436,7 +453,7 @@ components:
           type: string
           description: Breve descrizione dell'offerta
   parameters:
-    Authorization:
+    AuthorizationOauth2:
       name: AuthorizationOauth2
       in: header
       required: true

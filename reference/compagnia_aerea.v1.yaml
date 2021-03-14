@@ -61,6 +61,7 @@ paths:
           description: Internal Server Error
       operationId: get-flights
       description: È la risorsa che restituisce tutte le offerte di voli attive.
+      parameters: []
   /notifypayment:
     post:
       summary: Ricevi pagamento
@@ -116,6 +117,44 @@ paths:
                     id: 2542
         description: ''
       description: È la risorsa che permette al fornitore dei servizi bancari di inviare alla compagnia aerea la quota del pagamento ricevuto dal cliente per l'acquisto dell'offerta.
+      tags:
+        - Risorse
+      parameters:
+        - $ref: ./fornitore_servizi_bancari.v1.yaml#/components/parameters/AuthorizationAPIKey
+  /registration:
+    post:
+      summary: Registra un nuovo utente
+      operationId: post-registration
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+              examples:
+                Esempio:
+                  value:
+                    token: bWFnZ2llOnN1bW1lcnM=
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+      description: È la risorsa che permette a chi intende interagire con la compagnia aerea di ottenere l'APIKey per poter essere identificato e autorizzato.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ./maps.v1.yaml#/components/schemas/credentials
+            examples:
+              Esempio:
+                value:
+                  username: Mario
+                  password: 12a4a54s
+        description: ''
       tags:
         - Risorse
 components:
