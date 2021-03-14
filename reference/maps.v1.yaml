@@ -92,7 +92,7 @@ paths:
       security:
         - authorization: []
       tags:
-        - Operazioni
+        - Risorse
   /registration:
     post:
       summary: Registra un nuovo utente
