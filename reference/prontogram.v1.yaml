@@ -138,7 +138,8 @@ paths:
         '415':
           description: Unsupported Media Type
       description: 'È la risorsa che, a fronte di una richiesta HTTP nella cui intestazione vi è un `token` identificativo valido, invia un messaggio il cui corpo e destinatario sono quelli specificati nel body della richiesta HTTP.'
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
       security:
         - tokenSessione: []
       requestBody:
@@ -383,6 +384,34 @@ paths:
         È la risorsa che, a fronte di una richiesta HTTP nella cui intestazione vi è un `token` identificativo valido, restituisce il messaggio con id pari al parametro di query `messageid` inviato al cliente il cui username è pari al parametro di query `username`.
 
         Il body della richiesta e della risposta HTTP è di tipo `application/vnd.api+json` in quanto l'API prontogramAPI è al livello 3 di modello di maturità di Richardson: nella risposta sono presenti anche i campi `links` per permettere l'esplorazione dinamica, come richiesto da RMML3.
+  /login:
+    post:
+      summary: Autentica il cliente
+      operationId: post-login
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+              examples:
+                Esempio:
+                  value:
+                    token: bWFnZ2llOnN1bW1lcnM=
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+      description: È la risorsa che permette al cliente di ottenere il token tramite cui potrà essere identificato e autorizzato da Prontogram.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ./maps.v1.yaml#/components/schemas/credentials
 components:
   securitySchemes:
     tokenSessione:
@@ -406,3 +435,11 @@ components:
         description:
           type: string
           description: Breve descrizione dell'offerta
+  parameters:
+    Authorization:
+      name: AuthorizationOauth2
+      in: header
+      required: true
+      schema:
+        type: string
+      description: 'Il valore deve essere il token che il cliente ha ricevuto durante la registrazione, preceduto da `Bearer`'
