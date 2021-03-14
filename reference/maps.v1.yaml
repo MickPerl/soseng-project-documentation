@@ -131,6 +131,8 @@ paths:
                   username: Mario
                   password: Albatros12
       description: 'È la risorsa che permette ad un utente di registrarsi, dopo aver fornito la propria username e password.'
+      tags:
+        - Risorse
 components:
   schemas: {}
   securitySchemes:

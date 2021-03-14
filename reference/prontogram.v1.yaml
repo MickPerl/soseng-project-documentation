@@ -163,6 +163,8 @@ paths:
                       description: 'Roma - Berlino, Classe Premium'
                       code: '1234'
         description: Il body della richiesta HTTP è di tipo `application/vnd.api+json` in quanto l'API prontogramAPI è al livello 3 di modello di maturità di Richardson.
+      tags:
+        - Risorse
   '/message/{username}':
     parameters:
       - schema:
@@ -400,3 +402,5 @@ components:
         description:
           type: string
           description: Breve descrizione dell'offerta
+tags:
+  - name: Panoramica
