@@ -57,6 +57,7 @@ paths:
                           currency: €
                         offer_code: ryan253
                     companyname: ryanflights
+          headers: {}
         '500':
           description: Internal Server Error
       operationId: get-flights
@@ -119,8 +120,7 @@ paths:
       description: È la risorsa che permette al fornitore dei servizi bancari di inviare alla compagnia aerea la quota del pagamento ricevuto dal cliente per l'acquisto dell'offerta.
       tags:
         - Risorse
-      parameters:
-        - $ref: ./fornitore_servizi_bancari.v1.yaml#/components/parameters/AuthorizationAPIKey
+      parameters: []
   /registration:
     post:
       summary: Registra un nuovo utente

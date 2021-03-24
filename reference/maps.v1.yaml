@@ -88,13 +88,7 @@ paths:
               type: object
               properties: {}
         description: Specifica un punto geografico di partenza e un array di uno o più punti di arrivo.
-      parameters:
-        - schema:
-            type: string
-          in: header
-          name: Authorization
-          required: true
-          description: 'Il valore deve essere il token che il cliente ha ricevuto durante la registrazione, preceduto da `Basic`'
+      parameters: []
       security:
         - authorization: []
       tags:
