@@ -8,7 +8,7 @@ Abbiamo poi verificato le condizioni di connectedness e quindi proiettato l'outp
 La coreografia cui siamo giunti dopo numerosi confronti, riflessioni e iterazioni è presentata di seguito: 
 
 ```javascript
-C ::= (invio_interessi: cliente --> acmesky)*
+C ::= (invio_interesse: cliente --> acmesky)*
 
 |
 
@@ -52,7 +52,7 @@ Per illustrare ogni punto di questa coreografia, l'articoliamo nei 4 blocchi seg
 title: "Articolazione della coreografia in sotto-coreografie"
 -->
 ```javascript
-C::= registrazione_interessi_utente | richiesta_e_inoltro_offerte |
+C::= registrazione_interesse_utente | richiesta_e_inoltro_offerte |
 ricezione_e_inoltro_offerte_LM | acquisto_offerta
 ```
 
@@ -64,7 +64,7 @@ Passiamo in rassegna ciascun blocco, esplicitando la semantica di ogni comunicaz
 title: "Sotto-coreografia: registrazione_interessi_utente"
 -->
 ```javascript
-registrazione_interessi_utente ::= (invio_interesse: cliente --> acmesky)*
+registrazione_interesse_utente ::= (invio_interesse: cliente --> acmesky)*
 ```
 
 Nell'ambito della comunicazione `invio_interesse`, il cliente esprime le sue esigenze relativamente al biglietto aereo di andata e ritorno che intede acquistare: in dettaglio, specifica il periodo in cui intende viaggiare e il prezzo massimo che è disposto a pagare. 
@@ -174,7 +174,7 @@ Per una maggiore chiarezza, riproponiamo l'articolazione della coregrafia di cui
 title: "Articolazione della coreografia in sotto-coreografie"
 -->
 ```javascript
-C::= registrazione_interessi_utente | richiesta_e_inoltro_offerte |
+C::= registrazione_interesse_utente | richiesta_e_inoltro_offerte |
 ricezione_e_inoltro_offerte_LM | acquisto_offerta
 ```
 
@@ -186,10 +186,10 @@ Le diverse sotto-coreografie sono eseguite in parallelo: ai fini della connected
 title: "Sotto-coreografia: registrazione_interessi_utente"
 -->
 ```javascript
-registrazione_interessi_utente ::= (invio_interessi: cliente --> acmesky)*
+registrazione_interesse_utente ::= (invio_interesse: cliente --> acmesky)*
 ```
 
-Dato che la comunicazione `invio_interessi` è contrassegnata dall'operatore di iterazione (`*`) dobbiamo verificare la connessione tanto sulla sequenza quanto sulla scelta non deterministica tra il ripetere l'operazione stessa e procedere nella coreografia:
+Dato che la comunicazione `invio_interesse` è contrassegnata dall'operatore di iterazione (`*`) dobbiamo verificare la connessione tanto sulla sequenza quanto sulla scelta non deterministica tra il ripetere l'operazione stessa e procedere nella coreografia:
 - in caso l'operazione sia ripetuta, si ha connessione per sequenza in quanto **a = c**;
 - in caso l'operazione non sia ripetuta, la coreografia non presenta comunicazioni successive, per cui sono rispettate tutte le condizioni di connessione.
 
@@ -201,12 +201,14 @@ Si ha connessione anche per scelta dal momento che, in caso non si ripeta, non s
 title: "Sotto-coreografia: richiesta_e_inoltro_offerte"
 -->
 ```javascript
-richiesta_e_inoltro_offerte ::= ( (richiesta_offerte: acmesky --> compagnia_aerea_a ;
-risposta_offerte: compagnia_aerea_a --> acmesky) |   
-... |
-(richiesta_offerte: acmesky --> compagnia_aerea_z ; risposta_offerte: compagnia_aerea_z --> acmesky) ) ; 
+richiesta_e_inoltro_offerte ::= (
+  (richiesta_offerte: acmesky --> compagnia_aerea_a ;
+   risposta_offerte: compagnia_aerea_a --> acmesky) | ... |
+(richiesta_offerte: acmesky --> compagnia_aerea_z ;
+risposta_offerte: compagnia_aerea_z --> acmesky) ) ; 
 1 + (invio_offerte: acmesky --> prontogram ;
-inoltro_offerte: prontogram --> cliente_1 | ... | inoltro_offerte: prontogram --> cliente_n )
+inoltro_offerte: prontogram --> cliente_1 | ... |
+inoltro_offerte: prontogram --> cliente_n )
 ```
 
 La comunicazione `richiesta_offerte` è connessa per sequenza con l'operazione seguente in quanto **b = c**.
@@ -221,13 +223,16 @@ La comunicazione `invio_offerte` è connessa per la sequenza con `inoltro_offert
 title: "Sotto-coreografia: ricezione_e_inoltro_offerte_LM"
 -->
 ```javascript
-ricezione_e_inoltro_offerte_LM ::= (last_minute: compagnia_aerea_a --> acmesky ;
+ricezione_e_inoltro_offerte_LM ::= (
+  last_minute: compagnia_aerea_a --> acmesky ;
 1 + (invio_offerte_LM: acmesky --> prontogram ;
-inoltro_offerte_LM: prontogram --> cliente_1a | ... | inoltro_offerte_LM: prontogram --> cliente_na) ) | 
+inoltro_offerte_LM: prontogram --> cliente_1a | ... |
+inoltro_offerte_LM: prontogram --> cliente_na) ) | 
 ... |
 (last_minute: compagnia_aerea_z --> acmesky ;
 1 + (invio_offerte_LM: acmesky --> prontogram ; 
-inoltro_offerte_LM: prontogram --> cliente_1z | ... | inoltro_offerte_LM: prontogram --> cliente_nz) )
+inoltro_offerte_LM: prontogram --> cliente_1z | ... |
+inoltro_offerte_LM: prontogram --> cliente_nz) )
 ```
 
 La comunicazione `last_minute` è connessa per sequenza con `invio_offerte_LM` in quanto **b = c** e con `1`. La scelta seguente è connessa, essendo uno dei due branch `1`.
@@ -280,108 +285,129 @@ title: "Proiezione su cliente"
 -->
 ```javascript
 proj(C, cliente): (^invio_interessi@acmesky)* |
-(( (1;1) | ... | (1;1) ) ; 1 + (1 ; 1 | ... |1 )) | ((1 ; 1 + (1; 1 | ... | 1)) | ... |(1 ; 1 + (1 ; 1 | ... | 1 )) ) | 
-(^invio_codice_offerta@acmesky ; notifica_errore_codice@acmesky + (invio_link_banca@acmesky ;
-^pagamento@fornitore_servizi_bancari ;
-notifica_errore_pagamento@fornitore_servizi_bancari + ((1 ; invio_biglietto@compagnia_aerea) | 
-1 ; 1 + (propongo_trasferimento@acmesky ; 
+(( (1;1) | ... | (1;1) ) ; 1 + (1 ; 1 | ... |1 )) | ((1 ; 1 + (1; 1 | ... | 1))
+| ... |(1 ; 1 + (1 ; 1 | ... | 1 )) ) |
+(^invio_codice_offerta@acmesky ; notifica_errore_codice@acmesky +
+(invio_link_banca@acmesky ; ^pagamento@fornitore_servizi_bancari ;
+notifica_errore_pagamento@fornitore_servizi_bancari +
+((1 ; invio_biglietto@compagnia_aerea) | 1 ; 1 + (propongo_trasferimento@acmesky ; 
 1 + 1))) )
 ```
-
+---
 <!--
 title: "Proiezione su cliente_1"
 -->
 ```javascript
 proj(C, cliente_1):  (1)* |(( (1;1) | ... | (1;1)); 
 1 + (1 ; inoltro_offerte@prontogram |... | 1))
-| ((1 ; 1 + (1; 1 | ... | 1)) | ... |(1 ; 1 + (1 ; 1 | ... | 1 )) ) | (1 ; 1 + (1 ; 1 ; 1 + ((1 ; 1 ) |  1 ;
+| ((1 ; 1 + (1; 1 | ... | 1)) | ... |(1 ; 1 + (1 ; 1 | ... | 1 )) ) |
+(1 ; 1 + (1 ; 1 ; 1 + ((1 ; 1 ) |  1 ;
 1 + (1 ; 1 + 1))) )
 ```
-
+---
 <!--
 title: "Proiezione su cliente_n"
 -->
 ```javascript
 proj(C, cliente_n):  (1)* |(( (1;1) | ... | (1;1)); 
 1 + (1 ; 1 |... | inoltro_offerte@prontogram))
-| ((1 ; 1 + (1; 1 | ... | 1)) | ... |(1 ; 1 + (1 ; 1 | ... | 1 )) ) | (1 ; 1 + (1 ; 1 ; 1 + ((1 ; 1 ) | 1 ;
+| ((1 ; 1 + (1; 1 | ... | 1)) | ... |(1 ; 1 + (1 ; 1 | ... | 1 )) ) |
+(1 ; 1 + (1 ; 1 ; 1 + ((1 ; 1 ) | 1 ;
 1 + (1 ; 1 + 1))) )
 ```
-
+---
 <!--
 title: "Proiezione su cliente_1a"
 -->
 ```javascript
 proj(C, cliente_1a): (1)* |(( (1;1) | ... | (1;1)); 
 1 + (1 ; 1 |... | 1))
-| ((1 ; 1 + (1; inoltro_offerte_LM@prontogram | ... | 1)) | ... |(1 ; 1 + (1 ; 1 | ... | 1 )) ) |
+| ((1 ; 1 + (1; inoltro_offerte_LM@prontogram | ... | 1)) | ... |
+(1 ; 1 + (1 ; 1 | ... | 1 )) ) |
 (1 ; 1 + (1 ; 1 ; 1 + ((1 ; 1 ) | 1 ; 1 + (1 ; 1 + 1))) )
 ```
-
-
+---
 <!--
 title: "Proiezione su cliente_1z"
 -->
 ```javascript
 proj(C, cliente_1z): (1)* |(( (1;1) | ... | (1;1)); 
 1 + (1 ; 1 |... | 1))
-| ((1 ; 1 + (1; 1 | ... | 1)) | ... |(1 ; 1 + (1 ; inoltro_offerte_LM@prontogram | ... | 1)) ) |
+| ((1 ; 1 + (1; 1 | ... | 1)) | ... |
+(1 ; 1 + (1 ; inoltro_offerte_LM@prontogram | ... | 1)) ) |
 (1 ; 1 + (1 ; 1 ; 1 + ((1 ; 1 ) | 1 ; 1 + (1 ; 1 + 1))) )
 ```
-
+---
 <!--
 title: "Proiezione su cliente_na"
 -->
 ```javascript
 proj(C, cliente_na): (1)* |(( (1;1) | ... | (1;1)); 
 1 + (1 ; 1 |... | 1))
-| ((1 ; 1 + (1; 1 | ... | inoltro_offerte_LM@prontogram )) | ... |(1 ; 1 + (1 ; 1 | ... | 1 )) ) |
+| ((1 ; 1 + (1; 1 | ... | inoltro_offerte_LM@prontogram ))
+| ... |(1 ; 1 + (1 ; 1 | ... | 1 )) ) |
 (1 ; 1 + (1 ;
 1 ; 1 + ((1 ; 1 ) | 1 ; 1 + (1 ; 1 + 1))) )
 ```
-
+---
 <!--
 title: "Proiezione su cliente_nz"
 -->
 ```javascript
 proj(C, cliente_nz): (1)* |(( (1;1) | ... | (1;1)); 
 1 + (1 ; inoltro_offerte@prontogram |... | 1))
-| ((1 ; 1 + (1; 1 | ... | 1)) | ... |(1 ; 1 + (1 ; 1 | ... | inoltro_offerte_LM@prontogram )) ) |
+| ((1 ; 1 + (1; 1 | ... | 1)) | ... |
+(1 ; 1 + (1 ; 1 | ... | inoltro_offerte_LM@prontogram )) ) |
 (1 ; 1 + (1 ; 1 ; 1 + ((1 ; 1 ) | 1 ; 1 + (1 ; 1 + 1))))
 ```
-
+---
 <!--
 title: "Proiezione su compagnia_trasporto_vicina"
 -->
 ```javascript
-proj(C, compagnia_trasporto_vicina): (1)* | (( (1;1) | ... | (1;1) ) ; 1 + (1 ; 1 | ... |1 )) | ((1 ; 1 + (1; 1 | ... | 1)) | ... |(1 ; 1 + (1 ; 1 | ... | 1 )) ) (1 ; 1 + (1 ; 1 ; 1 + ((1 ; 1 ) | 1 ;
+proj(C, compagnia_trasporto_vicina): (1)* |
+(( (1;1) | ... | (1;1) ) ; 1 + (1 ; 1 | ... |1 )) |
+((1 ; 1 + (1; 1 | ... | 1)) | ... |(1 ; 1 + (1 ; 1 | ... | 1 )) ) |
+(1 ; 1 + (1 ; 1 ; 1 + ((1 ; 1) | 1 ;
 1 + (1 ; 1 + prenota_trasferimento@acmesky))) )
 ```
-
+---
 <!--
 title: "Proiezione su fornitori_serivizi_bancari"
 -->
 ```javascript
-proj(C, fornitori_serivizi_bancari): (1)* | (( (1;1) | ... | (1;1) ) ; 1 + (1 ; 1 | ... |1 )) | ((1 ; 1 + (1; 1 | ... | 1)) | ... |(1 ; 1 + (1 ; 1 | ... | 1 )) ) | (1 ; 1 + (1 ; pagamento@cliente ; ^notifica_errore_pagamento@cliente + ((^invio_quota_pagamento@compagnia_aerea ; 1 ) | ^invio_quota_pagamento@acmesky ; 1 + (1 ; 1 + 1))))
+proj(C, fornitori_serivizi_bancari): (1)* | (( (1;1) | ... | (1;1) ) ;
+1 + (1 ; 1 | ... |1 )) | ((1 ; 1 + (1; 1 | ... | 1)) | ... |
+(1 ; 1 + (1 ; 1 | ... | 1 )) ) |
+(1 ; 1 + (1 ; pagamento@cliente ; 
+^notifica_errore_pagamento@cliente + ((^invio_quota_pagamento@compagnia_aerea ; 1 ) |
+ ^invio_quota_pagamento@acmesky ; 1 + (1 ; 1 + 1))))
 ```
-
+---
 <!--
 title: "Proiezione su compagnie_aerea_a"
 -->
 ```javascript
 proj(C, compagnie_aerea_a): 
 
-(1)* | (( (richiesta_offerte@acmesky ; ^risposta_offerte@acmesky) | ... | (1;1) ) ; 1 + (1 ; 1 | ... |1 )) | ((^last_minute@acmesky ; 1 + (1; 1 | ... | 1)) | ... |(1 ; 1 + (1 ; 1 | ... | 1 )) ) | (1 ; 1 + (1 ; 1 ; 1 + ((1 ; 1 ) | 1 ; 1 + (1 ; 1 + 1))) )
+(1)* | (( (richiesta_offerte@acmesky ; ^risposta_offerte@acmesky)
+| ... | (1;1) ) ; 1 + (1 ; 1 | ... |1 )) |
+((^last_minute@acmesky ; 1 + (1; 1 | ... | 1)) | ... |
+(1 ; 1 + (1 ; 1 | ... | 1 )) ) | (1 ; 1 + (1 ; 1 ; 1 + ((1 ; 1 ) |
+1 ; 1 + (1 ; 1 + 1))) )
 ```
-
+---
 <!--
 title: "Proiezione su compagnie_aerea_z"
 -->
 ```javascript
-proj(C, compagnie_aerea_z): (1)* | (( (1;1) | ... | (richiesta_offerte@acmesky ; ^risposta_offerte@acmesky) ) ; 1 + (1 ; 1 | ... |1 )) | ((1 ; 1 + (1; 1 | ... | 1)) | ... |(^last_minute@acmesky ; 1 + (1 ; 1 | ... | 1 )) ) |
+proj(C, compagnie_aerea_z): (1)* | (( (1;1) | ... |
+(richiesta_offerte@acmesky ; ^risposta_offerte@acmesky) ) ;
+1 + (1 ; 1 | ... |1 )) | ((1 ; 1 + (1; 1 | ... | 1)) | ... |
+(^last_minute@acmesky ; 1 + (1 ; 1 | ... | 1 )) ) |
 (1 ; 1 + (1 ; 1 ; 1 + ((1 ; 1 ) | 1 ; 1 + (1 ; 1 + 1))) )
 ```
-
+---
 <!--
 title: "Proiezione su acmesky"
 -->
@@ -391,20 +417,26 @@ proj(C, acmesky):
 (invio_interessi@cliente)*
 |
 (
-( (^richiesta_offerte@compagnia_aerea_a ; risposta_offerte@compagnia_aerea_a) |   ... | (^richiesta_offerte@compagnia_aerea_z ; risposta_offerte@compagnia_aerea_z) ) ; 
-1 + (^invio_offerte@prontogram ;
-1 | ... | 1 )) | ((last_minute@compagnia_aerea_a ; 1 +               (^invio_offerte_LM@prontogram ; 1 | ... | 1)) | ... |
-(last_minute@compagnia_aerea_z; 1 + (^invio_offerte_LM@prontogram ; 1 | ... | 1 )))| 
-(invio_codice_offerta@cliente ; ^notifica_errore_codice@cliente + (^invio_link_banca@cliente ; 1 ; 1 + (( 1 ; 1 ) |
-invio_quota_pagamento@fornitore_servizi_bancari ; 1 + (^propongo_trasferimento@cliente ;
+( (^richiesta_offerte@compagnia_aerea_a ; risposta_offerte@compagnia_aerea_a)
+| ... |
+(^richiesta_offerte@compagnia_aerea_z ; risposta_offerte@compagnia_aerea_z) ) ; 
+1 + (^invio_offerte@prontogram ; 1 | ... | 1 )) |
+((last_minute@compagnia_aerea_a ; 1 + (^invio_offerte_LM@prontogram ;
+1 | ... | 1)) | ... | (last_minute@compagnia_aerea_z; 1 +
+(^invio_offerte_LM@prontogram ; 1 | ... | 1 )))| 
+(invio_codice_offerta@cliente ; ^notifica_errore_codice@cliente +
+(^invio_link_banca@cliente ; 1 ; 1 + (( 1 ; 1 ) |
+invio_quota_pagamento@fornitore_servizi_bancari ;
+1 + (^propongo_trasferimento@cliente ;
 1 + ^prenota_trasferimento@compagnia_trasporto_vicina)))  )
 ```
-
+---
 <!--
 title: "Proiezione su prontogram"
 -->
 ```javascript
-proj(C, prontogram): (1)* |(( (1;1) | ... | (1;1) ) ; 1 + (^invio_offerte@acmesky ; ^inoltro_offerte@cliente_1 |
+proj(C, prontogram): (1)* |(( (1;1) | ... | (1;1) ) ; 1 +
+(^invio_offerte@acmesky ; ^inoltro_offerte@cliente_1 |
 ... | ^inoltro_offerte@cliente_n))|     
 ((1 ; 1 + (invio_offerte_LM@acmesky ; ^inoltro_offerte@cliente_1a |
 ... | ^inoltro_offerte@cliente_na)) | ... | (1 ; 1 + 

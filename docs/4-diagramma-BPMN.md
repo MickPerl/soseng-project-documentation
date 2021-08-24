@@ -8,21 +8,19 @@ Per una maggiore chiarezza, articoliamo anche la trattazione del diagramma BPMN 
 - Registrazione degli interessi degli utenti;
 - Richiesta delle offerte e inoltro;
 - Ricezione delle offerte LM e inoltro;
-- Acquisto del biglietto.
+- Acquisto di un'offerta.
 
 ## Registrazione interessi degli utenti
 
-## Richiesta e inoltro delle offerte
+## Richiesta delle offerte e inoltro
+1. Questa parte attiene alle seguenti attività:
+2. ACMESky richiede alle compagnie aeree le offerte attive;
+3. ACMESky memorizza le offerte ricevute
+4. ACMESky ricerca corrispondenze tra le offerte ricevute e gli interessi degli utenti: per ogni corrispondenza trovata, genera un codice identificativo della coppia offerta-utente;
+5. ACMESky invia a Prontogram le offerte (descrizione + codice) che incontrano gli interessi di qualche utente;
+6. Prontogram inoltra le offerte agli utenti interessati.
 
-
-Questa parte attiene alle seguenti attività:
-- la richiesta delle offerte attive alle compagnie aeree da parte di ACMESky;
-- la ricerca di corrispondenze tra le offerte e gli interessi degli utenti;
-- l'invio delle offerte che incontrano gli interessi di qualche utente a Prontogram da parte di ACMESky;
-- l'inoltro delle offerte agli utenti interessati da parte di Prontogram.
-
-
-## Ricezione e inoltro delle offerte LM
+## Ricezione delle offerte LM e inoltro
 
 ## Acquisto offerta
 Assunzione mezzi compagnie trasporti infiniti
