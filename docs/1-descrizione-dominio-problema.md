@@ -3,6 +3,6 @@ Questo progetto intende realizzare un'architettura software orientata ai servizi
 ACMESky, essendo una SOA, integra sotto forma di servizi le seguenti capability esterne:
 - **calcolo delle distanze geografiche** offerta da *Google Maps*, per ottenere la distanza tra il domicilio dell'utente e l'aeroporto da cui parte l'aereo di cui ha acquistato il biglietto, nonché la distanza tra il domicilio dell'utente e le sedi delle diverse compagnie di noleggio con cui ACMESky ha accordi;
 - **gestione dei pagamenti** offerta da un *Fornitore di servizi bancari*, per garantire all'utente che la sua transazione per l'acquisto del biglietto vada a buon fine e sia sicura;
-- **trasporto del cliente dal suo domicilio all'areoporto** offerta da una serie di *compagnie di noleggio con autista* (rinominate in *compagnie di trasporto*, per brevità), con cui ACMESky ha accordi commerciali;
+- **trasporto del cliente dal suo domicilio all'aeroporto** offerta da una serie di *compagnie di noleggio con autista* (rinominate in *compagnie di trasporto*, per brevità), con cui ACMESky ha accordi commerciali;
 - **trasferimenti aerei di andata e ritorno** offerta da una serie di *compagnie aeree* convenzionate con ACMESky, le quali comunicano ad ACMESky le offerte ordinarie on demand e le offerte last minute (offerte LM) non appena sono attivate e inviano al cliente il biglietto acquistato, per poi realizzare il trasferimento aereo;
-- **inoltro di messaggi** offerta da un'app di messagistica chiamata *Prontogram*, per inoltrare le offerte di biglietti aerei ai clienti interessati.
+- **inoltro di messaggi** offerta da un'app di messaggistica chiamata *Prontogram*, per inoltrare le offerte di biglietti aerei ai clienti interessati.

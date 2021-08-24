@@ -1,6 +1,6 @@
 # Coreografia e proiezioni
 
-Abbiamo modellato le comunicazioni dello scenario in oggetto definendo una coreografia: in dettaglio, per la sua definizione formale ci siamo serviti di un *process calculi*, essendo più accurato di WS-CDL e della formalizzazione per le coreografie di BPMN.
+Abbiamo modellato le comunicazioni dello scenario in oggetto definendo una coreografia: in dettaglio, per la sua definizione formale ci siamo serviti di un *process calculi*, essendo più accurato di WS-CDL (Web Services Choreography Description Language) e della formalizzazione per le coreografie di BPMN.
 
 Abbiamo poi verificato le condizioni di connectedness e quindi proiettato l'output in un sistema di ruoli.
 
@@ -12,21 +12,25 @@ C ::= (invio_interessi: cliente --> acmesky)*
 
 |
 
-(  ( (richiesta_offerte: acmesky --> compagnia_aerea_a ; risposta_offerte: compagnia_aerea_a --> acmesky) |   
-... |
-(richiesta_offerte: acmesky --> compagnia_aerea_z ; risposta_offerte: compagnia_aerea_z --> acmesky) ) ; 
+(  ( (richiesta_offerte: acmesky --> compagnia_aerea_a ;
+      risposta_offerte: compagnia_aerea_a --> acmesky) | ... |
+     (richiesta_offerte: acmesky --> compagnia_aerea_z ; 
+      risposta_offerte: compagnia_aerea_z --> acmesky) ) ; 
 1 + (invio_offerte: acmesky --> prontogram ;
-inoltro_offerte: prontogram --> cliente_1 | ... | inoltro_offerte: prontogram --> cliente_n)  )
+inoltro_offerte: prontogram --> cliente_1 | ... |
+inoltro_offerte: prontogram --> cliente_n)  )
 
 |     
 
 ( (last_minute: compagnia_aerea_a --> acmesky ;
 1 + (invio_offerte_LM: acmesky --> prontogram ;
-inoltro_offerte_LM: prontogram --> cliente_1a | ... | inoltro_offerte_LM: prontogram --> cliente_na) ) | 
+inoltro_offerte_LM: prontogram --> cliente_1a | ... |
+inoltro_offerte_LM: prontogram --> cliente_na) ) | 
 ... |
 (last_minute: compagnia_aerea_z --> acmesky ;
 1 + (invio_offerte_LM: acmesky --> prontogram ; 
-inoltro_offerte_LM: prontogram --> cliente_1z | ... | inoltro_offerte_LM: prontogram --> cliente_nz) ))
+inoltro_offerte_LM: prontogram --> cliente_1z | ... |
+inoltro_offerte_LM: prontogram --> cliente_nz) ))
 
 | 
 
@@ -35,7 +39,8 @@ inoltro_offerte_LM: prontogram --> cliente_1z | ... | inoltro_offerte_LM: pronto
 (invia_link_banca: acmesky --> cliente ;
 pagamento: cliente --> fornitore_servizi_bancari ;
 (notifica_errore_pagamento: fornitore_servizi_bancari --> cliente) +
-( (invio_quota_pagamento: fornitore_servizi_bancari  --> compagnia_aerea ; invio_biglietto: compagnia_aerea --> cliente) | 
+( (invio_quota_pagamento: fornitore_servizi_bancari  --> compagnia_aerea ;
+invio_biglietto: compagnia_aerea --> cliente) | 
 invio_quota_pagamento: fornitore_servizi_bancari --> acmesky ;
 1 + (proposta_trasferimento: acmesky --> cliente ; 
 1 + prenotazione_trasferimento: acmesky --> compagnia_trasporto_vicina) )))
@@ -47,7 +52,8 @@ Per illustrare ogni punto di questa coreografia, l'articoliamo nei 4 blocchi seg
 title: "Articolazione della coreografia in sotto-coreografie"
 -->
 ```javascript
-C::= registrazione_interessi_utente | richiesta_e_inoltro_offerte | ricezione_e_inoltro_offerte_LM | acquisto_offerta
+C::= registrazione_interessi_utente | richiesta_e_inoltro_offerte |
+ricezione_e_inoltro_offerte_LM | acquisto_offerta
 ```
 
 Passiamo in rassegna ciascun blocco, esplicitando la semantica di ogni comunicazione, nonché le condizioni di connectedness rispettate.
@@ -58,12 +64,12 @@ Passiamo in rassegna ciascun blocco, esplicitando la semantica di ogni comunicaz
 title: "Sotto-coreografia: registrazione_interessi_utente"
 -->
 ```javascript
-registrazione_interessi_utente ::= (invio_interessi: cliente --> acmesky)*
+registrazione_interessi_utente ::= (invio_interesse: cliente --> acmesky)*
 ```
 
-Nell'ambito della comunicazione `invio_interesse`, il cliente esprime le sue esigenze relativamente al biglietto aereo di andata e ritorno che intede acquistare: in dettaglio, specifica il periodo il periodo in cui intende viaggiare e il prezzo massimo che è disposto a pagare. 
+Nell'ambito della comunicazione `invio_interesse`, il cliente esprime le sue esigenze relativamente al biglietto aereo di andata e ritorno che intede acquistare: in dettaglio, specifica il periodo in cui intende viaggiare e il prezzo massimo che è disposto a pagare. 
 
-Abbiamo contrassegnato la comunicazione con `*` affinché lo stesso cliente possa esprimere più volte le sue esigenze: dal suo canto, ACMESky, nel ricercare le offerte, considererà per ogni utente sempre e solo la sua ultima specificazione.
+Abbiamo contrassegnato la comunicazione con `*` affinché lo stesso cliente possa esprimere più volte le sue esigenze: dal suo canto, ACMESky, nel ricercare le offerte, considererà per ogni utente sempre e solo la sua ultima comunicazione.
 
 ### Richiesta e inoltro offerte
 
@@ -71,12 +77,15 @@ Abbiamo contrassegnato la comunicazione con `*` affinché lo stesso cliente poss
 title: "Sotto-coreografia: richiesta_e_inoltro_offerte"
 -->
 ```javascript
-richiesta_e_inoltro_offerte ::= ( (richiesta_offerte: acmesky --> compagnia_aerea_a ;
-risposta_offerte: compagnia_aerea_a --> acmesky) |   
+richiesta_e_inoltro_offerte ::= (
+  (richiesta_offerte: acmesky --> compagnia_aerea_a ;
+   risposta_offerte: compagnia_aerea_a --> acmesky) |   
 ... |
-(richiesta_offerte: acmesky --> compagnia_aerea_z ; risposta_offerte: compagnia_aerea_z --> acmesky) ) ; 
+  (richiesta_offerte: acmesky --> compagnia_aerea_z ;
+   risposta_offerte: compagnia_aerea_z --> acmesky) ) ; 
 1 + (invio_offerte: acmesky --> prontogram ;
-inoltro_offerte: prontogram --> cliente_1 | ... | inoltro_offerte: prontogram --> cliente_n )
+inoltro_offerte: prontogram --> cliente_1 | ... |
+inoltro_offerte: prontogram --> cliente_n )
 ```
 
 ACMESky, quotidianamente, ripete la comunicazione `richiesta_offerte`, entro cui chiede ad una singola compagnia aerea che le restituisca tutte le offerte attive. A questa comunicazione, ne segue un'altra, `risposta_offerte`, con cui la compagnia aerea contattata invia ad ACMESky quanto richiestole.
@@ -85,7 +94,7 @@ ACMESky, quotidianamente, ripete la comunicazione `richiesta_offerte`, entro cui
 > Abbiamo adottato la notazione `...` al fine di catturare il fatto che le due comunicazioni appena descritte sono eseguite parallelamente per ogni compagnia aerea convenzionata con ACMESky.
 
 Dopo che la/le compagnia/e aerea/e hanno risposto, ACMESky verifica la presenza di una corrispondenza tra le offerte che gli sono giunte e le esigenze specificate dai suoi clienti fino a quel momento:
-- in caso affermativo, invia la/le offerta/e () al servizio di messagistica Prontogram con la comunicazione `invio_offerte`; Prontogram, con la comunicazione `inoltro_offerte`, inoltrerà questa/e offerta/e al destinatario indicatogli;
+- in caso affermativo, invia la/le offerta/e al servizio di messagistica Prontogram con la comunicazione `invio_offerte`; Prontogram, con la comunicazione `inoltro_offerte`, inoltrerà questa/e offerta/e al destinatario indicatogli;
 - in caso negativo, non segue alcuna comunicazione.
 
 <!-- theme: danger -->
@@ -100,13 +109,16 @@ Dopo che la/le compagnia/e aerea/e hanno risposto, ACMESky verifica la presenza 
 title: "Sotto-coreografia: ricezione_e_inoltro_offerte_LM"
 -->
 ```javascript
-ricezione_e_inoltro_offerte_LM ::= (last_minute: compagnia_aerea_a --> acmesky ;
-1 + (invio_offerte_LM: acmesky --> prontogram ;
-inoltro_offerte_LM: prontogram --> cliente_1a | ... | inoltro_offerte_LM: prontogram --> cliente_na) ) | 
-... |
-(last_minute: compagnia_aerea_z --> acmesky ;
-1 + (invio_offerte_LM: acmesky --> prontogram ; 
-inoltro_offerte_LM: prontogram --> cliente_1z | ... | inoltro_offerte_LM: prontogram --> cliente_nz) )
+ricezione_e_inoltro_offerte_LM ::= (
+  last_minute: compagnia_aerea_a --> acmesky ;
+  1 + (invio_offerte_LM: acmesky --> prontogram ;
+  inoltro_offerte_LM: prontogram --> cliente_1a | ... |
+  inoltro_offerte_LM: prontogram --> cliente_na) ) | 
+  ... |
+  (last_minute: compagnia_aerea_z --> acmesky ;
+  1 + (invio_offerte_LM: acmesky --> prontogram ; 
+  inoltro_offerte_LM: prontogram --> cliente_1z | ... |
+  inoltro_offerte_LM: prontogram --> cliente_nz) )
 ```
 
 Nell'ambito della comunicazione `last_minute`, una certa compagnia aerea invia ad ACMESky una sua offerta last-minute. Quindi, ACMESky verifica nuovamente la presenza di una corrispondenza tra il nuovo insieme di offerte memorizzate e le esigenze specificate dai suoi clienti fino a quel momento; a seconda che la verifica abbia esito positivo o meno, si eseguono le stesse comunicazioni di invio e inoltro delle offerte viste nella sezione precedente.
@@ -145,7 +157,7 @@ Nell'ambito della comunicazione `invio_codice_offerta`, il cliente invia ad ACME
 ## Verifica delle condizioni di connectedness
 In prima battuta, abbiamo dovuto comprendere se lo scenario in oggetto rientrasse nel caso sincrono o in quello asincrono; a dirimere la questione sono stati, tra gli altri:
 - i *clienti* i quali possono indicare le proprie esigenze sul portale di ACMESky più volte, ancor prima di ricevere le eventuali offerte corrispondenti;
-- le offerte last-minute che possono inviate in qualsiasi momento dalle compagnie aeree ad ACMESky.
+- le offerte last-minute che possono essere inviate in qualsiasi momento dalle compagnie aeree ad ACMESky.
 
 Pertanto, siamo giunti alla conclusione che questo scenario rientri nel caso **asincrono**.
 
@@ -162,7 +174,8 @@ Per una maggiore chiarezza, riproponiamo l'articolazione della coregrafia di cui
 title: "Articolazione della coreografia in sotto-coreografie"
 -->
 ```javascript
-C::= registrazione_interessi_utente | richiesta_e_inoltro_offerte | ricezione_e_inoltro_offerte_LM | acquisto_offerta
+C::= registrazione_interessi_utente | richiesta_e_inoltro_offerte |
+ricezione_e_inoltro_offerte_LM | acquisto_offerta
 ```
 
 Le diverse sotto-coreografie sono eseguite in parallelo: ai fini della connectedness, non vi sono condizioni per la composizione parallela, per cui possiamo ridurre la nostra analisi direttamente al livello delle sotto-coreografie. 
