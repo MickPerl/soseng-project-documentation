@@ -11,19 +11,33 @@ Per una maggiore chiarezza, articoliamo anche la trattazione del diagramma BPMN 
 - Acquisto di un'offerta.
 
 ## Registrazione interessi degli utenti
+Questa parte attiene alle seguenti attività:
+1. L'utente invia i propri interessi ad ACMESky: in caso ACMESky entro un minuto non gli notifichi il salvataggio riuscito degli interessi che ha inviato, ritenta l'invio per un certo numero di tentativi;
+2. ACMESky salva gli interessi ricevuti e notifica il salvataggio riuscito al cliente.
+
+[![Diagramma BPMN relativo alla richiesta e all'inoltro delle offerte](https://github.com/MickPerl/soseng-project-documentation/blob/master/assets/images/UML_richiesta_inoltro.png?raw=true
+ "Diagramma BPMN relativo alla richiesta e all'inoltro delle offerte")](https://github.com/MickPerl/soseng-project-documentation/blob/master/assets/images/UML_richiesta_inoltro.png?raw=true)
+
 
 ## Richiesta delle offerte e inoltro
-1. Questa parte attiene alle seguenti attività:
-2. ACMESky richiede alle compagnie aeree le offerte attive;
-3. ACMESky memorizza le offerte ricevute
-4. ACMESky ricerca corrispondenze tra le offerte ricevute e gli interessi degli utenti: per ogni corrispondenza trovata, genera un codice identificativo della coppia offerta-utente;
-5. ACMESky invia a Prontogram le offerte (descrizione + codice) che incontrano gli interessi di qualche utente;
-6. Prontogram inoltra le offerte agli utenti interessati.
+Questa parte attiene alle seguenti attività:
+1. ACMESky richiede alle compagnie aeree le offerte attive;
+2. ACMESky memorizza le offerte ricevute;
+3. ACMESky ricerca corrispondenze tra le offerte memorizzate e gli interessi ricevuti dagli utenti: per ogni corrispondenza trovata, genera un codice identificativo della coppia offerta-utente;
+4. ACMESky invia a Prontogram le offerte (descrizione + codice) che incontrano gli interessi di qualche utente;
+5. Prontogram inoltra le offerte agli utenti corrispondenti.
+
+
 
 ## Ricezione delle offerte LM e inoltro
+Questa parte attiene alle seguenti attività:
+1. Le compagnie aeree inviano ad ACMESky le offerte last-minute non appena le attivano;
+2. ACMESky memorizza le offerte LM ricevute;
+3. Punti 3-4-5 della sezione "Richiesta delle offerte e inoltro".
 
 ## Acquisto offerta
 Assunzione mezzi compagnie trasporti infiniti
+
 
 
 Questa parte attiene alle seguenti attività:
