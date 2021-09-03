@@ -1,6 +1,6 @@
 # Diagramma BPMN
 
-Il modello UML cui siamo giunti è qui riportato:
+Il modello BPMN cui siamo giunti è qui riportato:
 ![Diagramma BPMN](
  "Diagramma BPMN")
 

@@ -24,4 +24,4 @@ Abbiamo progettato una *Service Oriented Architecture* (SOA) che realizzi la pia
 ### 4. Realizzazione della piattaforma
 Abbiamo realizzato il sistema, implementando la logica dei partecipanti in **NodeJS** e **Jolie** e adottando, come Business Process Management System (BPMS), quello offerto da **Camunda** (Wildfly).
 
-[Link alle scelte implementative](5-modello-UML.md "Clicca per andare agli artefatti corrispondenti")
+[Link alle scelte implementative](6-implementazione.md "Clicca per andare alla documentazione corrispondente")
