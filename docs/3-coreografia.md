@@ -67,7 +67,7 @@ title: "Sotto-coreografia: registrazione_interessi_utente"
 registrazione_interesse_utente ::= (invio_interesse: cliente --> acmesky)*
 ```
 
-Nell'ambito della comunicazione `invio_interesse`, il cliente esprime le sue esigenze relativamente al biglietto aereo di andata e ritorno che intede acquistare: in dettaglio, specifica il periodo in cui intende viaggiare e il prezzo massimo che è disposto a pagare. 
+Nell'ambito della comunicazione `invio_interesse`, il cliente esprime le sue esigenze relativamente al biglietto aereo di andata e ritorno che intede acquistare: in dettaglio, specifica il periodo in cui intende viaggiare (quindi finestra temporale per l'andata e finestra temporale per il ritorno) e il prezzo massimo che è disposto a pagare. 
 
 Abbiamo contrassegnato la comunicazione con `*` affinché lo stesso cliente possa esprimere più volte le sue esigenze: dal suo canto, ACMESky, nel ricercare le offerte, considererà per ogni utente sempre e solo la sua ultima comunicazione.
 
@@ -98,7 +98,7 @@ Dopo che la/le compagnia/e aerea/e hanno risposto, ACMESky verifica la presenza 
 - in caso negativo, non segue alcuna comunicazione.
 
 <!-- theme: danger -->
-> in dettaglio, per ogni offerta, ACMESky invia a Prontogram una *descrizione*, il/i *cliente/i cui è indirizzata* e tanti *codici* quanti sono i clienti destinatari, ognuno dei quali individua univocamente l'offerta e il cliente: in questo modo **il codice è univoco per la coppia cliente - offerta**; se individuasse univocamente solo l'offerta, un qualsiasi cliente che ne ha ricevuto uno potrebbe diffonderlo, permettendo così anche soggetti di terzi di usufruire delle offerte: noi vogliamo che ACMESky abbia il pieno controllo sulle offerte inviate alla sua clientela in un certo momento, per cui vogliamo che un utente qualsiasi possa ottenere un codice valido solo per mezzo di ACMESky stesso. Un vantaggio di questa soluzione potrebbe essere la possibilità per ACMESky di condurre analisi di mercato, conoscendo esattamente i clienti a cui ha inviato le offerte e quanti hanno poi finalizzato l'acquisto.
+> in dettaglio, per ogni offerta, ACMESky invia a Prontogram una *descrizione* e tanti *codici* quanti sono i clienti destinatari: ogni codice individua univocamente la coppia offerta-cliente; se individuasse univocamente solo l'offerta, un qualsiasi cliente che ne ha ricevuto uno potrebbe diffonderlo, permettendo così anche soggetti di terzi di usufruire delle offerte: noi vogliamo che ACMESky abbia il pieno controllo sulle offerte inviate alla sua clientela in un certo momento, per cui vogliamo che un utente qualsiasi possa ottenere un codice valido solo per mezzo di ACMESky stesso. Un vantaggio di questa soluzione potrebbe essere la possibilità per ACMESky di condurre analisi di mercato, conoscendo esattamente i clienti a cui ha inviato le offerte e quanti hanno poi finalizzato l'acquisto.
 
 <!-- theme: warning -->
 > Abbiamo nuovamente adottato la notazione `...` per catturare il fatto che Prontogram eseguirà in parallelo l'operazione `inoltro_offerte` per ciascun cliente che gli è stato indicato nelle comunicazioni `invio_offerte`.

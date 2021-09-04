@@ -36,21 +36,10 @@ Questa parte attiene alle seguenti attività:
 3. Punti 3-4-5 della sezione "Richiesta delle offerte e inoltro".
 
 ## Acquisto offerta
-Assunzione mezzi compagnie trasporti infiniti
-
-
-
 Questa parte attiene alle seguenti attività:
-1. la ricezione del codice di ACMESky e il controllo della sua validità;
-2. la richiesta del link di pagamento al fornitore dei servizi bancari da parte di ACMESky e la sua ricezione di quest'ultimo;
-3. l'invio del link di pagamento al cliente da parte di ACMESky;
-4. l'invio dei dati di pagamento al fornitore dei servizi bancari da parte del cliente
-5. la verifica dei dati di pagamento ad opera del fornitore dei servizi bancari;
-6. l'invio della notifica circa l'esito del pagamento ai clienti da parte dei fornitori dei servizi bancari;
-7. l'invio dei fornitori dei servizi bancari della quota del pagamento ad ACMESky;
-8. l'invio dei fornitori dei servizi bancari della quota del pagamento alla compagnia aerea;
-9. l'invio del biglietto al cliente da parte della compagnia aerea;
-10. la richiesta di ACMESky al fornitore delle distanze circa la distanza tra il domicilio dell'utente e l'aeroporto di partenza dell'aereo di suo interesse;
-11. la proposta del serivizio di trasporto al cliente da parte di ACMESky e la risposta del cliente;
-12. in caso l'utente accetti, la richiestadi ACMESky al fornitore delle distanze circa le distanze tra il domicilio dell'utente e le sedi delle compagnie di trasporto;
-13. la prenotazione di ACMESky di un servizio di trasporto;  
+1. l'utente invia il codice dell'offerta che intende acquistare ad Acmesky e si mette in attesa di una comunicazione da Acmesky conseguente al controllo che realizzerà sul codice: Acmesky può notificargli che il codice è errato, caso in cui l'utente ritenta l'invio del codice, o il link a cui effettuare il pagamento;
+2. dopo aver inviato il pagamento al link del fornitore dei servizi bancari che gli è stato indicato, l'utente si mette in attesa di una comunicazione di quest'ultimo: in caso tale comunicazione notifichi che il pagamento è fallito (segue tale comunicazione anche ad Acmesky), l'utente lo ritenta, diversamente ne prende atto;
+3. il fornitore dei servizi bancari invia le quote spettanti ad Acmesky e alla compagnia aerea interessata, la quale procede quindi ad inviare all'utente il biglietto acquistato;
+4. dopo aver ricevuto la parte che gli spetta dal fornitore dei servizi bancari, Acmesky contrassegna il codice offerta-cliente acquistato come utilizzato;
+5. Acmesky controlla il prezzo dell'offerta acquistata: nel caso superi le 1000 euro, verifica, servendosi delle API di GMaps, che la casa dell'utente disti dall'aeroporto di interesse non più di 30 km, nel caso in cui chiede all'utente se vuole il servizio di trasporto con la navetta;
+6. nel caso l'utente risponda affermativamente, Acmesky, servendosi delle API di GMaps, raccoglie le distanze tra le compagnie di trasporto e il domicilio dell'utente, per poi prenotare il servizio di trasporto presso la compagnia più vicina.<>
