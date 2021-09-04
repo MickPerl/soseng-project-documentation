@@ -1,3 +1,3 @@
-# 6-implementazione
+# Implementazione
 
 The beginning of an awesome article...

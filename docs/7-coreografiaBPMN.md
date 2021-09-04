@@ -1,3 +1,3 @@
-# 7-coreografiaBPMN
+# Coreografia BPMN
 
 The beginning of an awesome article...

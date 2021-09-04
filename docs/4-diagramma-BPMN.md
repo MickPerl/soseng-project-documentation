@@ -15,9 +15,6 @@ Questa parte attiene alle seguenti attività:
 1. L'utente invia i propri interessi ad ACMESky: in caso ACMESky entro un minuto non gli notifichi il salvataggio riuscito degli interessi che ha inviato, ritenta l'invio per un certo numero di tentativi;
 2. ACMESky salva gli interessi ricevuti e notifica il salvataggio riuscito al cliente.
 
-[![Diagramma BPMN relativo alla richiesta e all'inoltro delle offerte](https://github.com/MickPerl/soseng-project-documentation/blob/master/assets/images/UML_richiesta_inoltro.png?raw=true
- "Diagramma BPMN relativo alla richiesta e all'inoltro delle offerte")](https://github.com/MickPerl/soseng-project-documentation/blob/master/assets/images/UML_richiesta_inoltro.png?raw=true)
-
 
 ## Richiesta delle offerte e inoltro
 Questa parte attiene alle seguenti attività:
