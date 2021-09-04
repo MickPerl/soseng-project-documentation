@@ -1,0 +1,3 @@
+# 7-coreografiaBPMN
+
+The beginning of an awesome article...

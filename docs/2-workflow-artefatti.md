@@ -25,3 +25,10 @@ Abbiamo progettato una *Service Oriented Architecture* (SOA) che realizzi la pia
 Abbiamo realizzato il sistema, implementando la logica dei partecipanti in **NodeJS** e **Jolie** e adottando, come Business Process Management System (BPMS), quello offerto da **Camunda** (Wildfly).
 
 [Link alle scelte implementative](6-implementazione.md "Clicca per andare alla documentazione corrispondente")
+
+## Bonus
+
+### Coreografia in BPMN
+Abbiamo deciso di realizzare anche una coreografia in BPMN al fine di individuare in maniera ancora più puntuale le interazioni tra i nostri attori: le coreografie in BPMN sono lo strumento più efficace in quanto permettono di evidenziare le interazioni tra i partecipanti senza dover dettagliarne i processi interni.
+ 
+[Link alla coreografia in BPMN](7-coreografiaBPMN.md "Clicca per andare all'artefatto corrispondente")
