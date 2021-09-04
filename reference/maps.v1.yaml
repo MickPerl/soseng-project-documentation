@@ -140,8 +140,8 @@ components:
           type: string
   securitySchemes:
     authorization:
-      type: http
-      scheme: basic
-      description: 'Questo schema di sicurezza richiede al client che nella richiesta HTTP passi anche l''header *Authorization* con le sue credenziali, nella forma di "Basic token": lo abbiamo introdotto perché vogliamo che tale API sia fruibile solo da soggetti con cui il *Fornitore delle distanze geografiche* ha preso accordi (nel nostro caso le credenziali di accesso saranno date solo ad *ACMESky*).'
+      name: auth
+      type: apiKey
+      in: header
 security:
   - API Key - 1: []
