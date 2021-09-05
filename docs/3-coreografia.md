@@ -8,7 +8,7 @@ Abbiamo poi verificato le condizioni di connectedness e quindi proiettato l'outp
 La coreografia cui siamo giunti dopo numerosi confronti, riflessioni e iterazioni è presentata di seguito: 
 
 ```javascript
-C ::= (invio_interesse: cliente --> acmesky)*
+C ::= invio_interessi: cliente --> acmesky
 
 |
 
@@ -45,6 +45,7 @@ invio_quota_pagamento: fornitore_servizi_bancari --> acmesky ;
 1 + (proposta_trasferimento: acmesky --> cliente ; 
 1 + prenotazione_trasferimento: acmesky --> compagnia_trasporto_vicina) )))
 ```
+AGGIUNGERE richiesta distanze prima di proposta e poi richiesta distanze per compagnia più vicina
 
 Per illustrare ogni punto di questa coreografia, l'articoliamo nei 4 blocchi seguenti.
 

@@ -1,3 +1,5 @@
 # Implementazione
 
-The beginning of an awesome article...
+<!-- theme: warning -->
+> Ottimizzazione! Controllo interessi duplicati per ridurre complessità computazionale ricerca match
+
