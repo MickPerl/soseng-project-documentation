@@ -16,21 +16,21 @@ C ::= (invio_interesse: cliente --> acmesky)*
       risposta_offerte: compagnia_aerea_a --> acmesky) | ... |
      (richiesta_offerte: acmesky --> compagnia_aerea_z ; 
       risposta_offerte: compagnia_aerea_z --> acmesky) ) ; 
-1 + (invio_offerte: acmesky --> prontogram ;
-inoltro_offerte: prontogram --> cliente_1 | ... |
-inoltro_offerte: prontogram --> cliente_n)  )
+1 + (invio_codice: acmesky --> prontogram ;
+inoltro_codice: prontogram --> cliente_1 | ... |
+inoltro_codice: prontogram --> cliente_n)  )
 
 |     
 
-( (last_minute: compagnia_aerea_a --> acmesky ;
-1 + (invio_offerte_LM: acmesky --> prontogram ;
-inoltro_offerte_LM: prontogram --> cliente_1a | ... |
-inoltro_offerte_LM: prontogram --> cliente_na) ) | 
+( (invio_offerte_LM: compagnia_aerea_a --> acmesky ;
+1 + (invio_codice_LM: acmesky --> prontogram ;
+inoltro_codice_LM: prontogram --> cliente_1a | ... |
+inoltro_codice_LM: prontogram --> cliente_na) ) | 
 ... |
-(last_minute: compagnia_aerea_z --> acmesky ;
-1 + (invio_offerte_LM: acmesky --> prontogram ; 
-inoltro_offerte_LM: prontogram --> cliente_1z | ... |
-inoltro_offerte_LM: prontogram --> cliente_nz) ))
+(invio_offerte_LM: compagnia_aerea_z --> acmesky ;
+1 + (invio_codice_LM: acmesky --> prontogram ; 
+inoltro_codice_LM: prontogram --> cliente_1z | ... |
+inoltro_codice_LM: prontogram --> cliente_nz) ))
 
 | 
 
