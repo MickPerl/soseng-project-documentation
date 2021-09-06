@@ -39,17 +39,17 @@ inoltro_codice_LM: prontogram --> cliente_nz)) ))
 
 (invio_codice_offerta: cliente --> acmesky ;
 (notifica_errore_codice: acmesky --> cliente) +
-(richiesta_link_pagamento: acmesky --> fornitore_servizi_bancari;
+(richiesta_link_pagamento: acmesky --> fornitore_servizi_bancari ;
 invio_link_pagamento: fornitore_servizi_bancari --> acmesky;
 inoltro_link_pagamento: acmesky --> cliente ;
 pagamento: cliente --> fornitore_servizi_bancari ;
-(notifica_errore_pagamento: fornitore_servizi_bancari --> cliente) +
+(notifica_errore_pagamento: fornitore_servizi_bancari --> cliente +
 ( (invio_quota_pagamento: fornitore_servizi_bancari  --> compagnia_aerea ;
 invio_biglietto: compagnia_aerea --> cliente) | 
 invio_quota_pagamento: fornitore_servizi_bancari --> acmesky ;
 1 + richiesta_distanza_domicilio_aeroporto: acmesky --> maps ;
 1 + (proposta_trasferimento: acmesky --> cliente ; 
-1 + richiesta_distanze_domicilio_compagnie_trasporto: acmesky --> maps ;
+1 + (richiesta_distanze_domicilio_compagnie_trasporto: acmesky --> maps ;
 prenotazione_trasferimento: acmesky --> compagnia_trasporto_vicina))))))
 ```
 Per illustrare ogni punto di questa coreografia, l'articoliamo nei 4 blocchi seguenti.
@@ -127,12 +127,12 @@ ricezione_e_inoltro_offerte_LM ::= (
   inoltro_codice_LM: prontogram --> cliente_nz)) )
 ```
 
-Nell'ambito della comunicazione `last_minute`, una certa compagnia aerea invia ad ACMESky una sua offerta last-minute. Quindi, ACMESky verifica nuovamente la presenza di una corrispondenza tra il nuovo insieme di offerte memorizzate e le esigenze specificate dai suoi clienti fino a quel momento; a seconda che la verifica abbia esito positivo o meno, si eseguono le stesse comunicazioni di invio e inoltro delle offerte viste nella sezione precedente.
+Nell'ambito della comunicazione `invio_offerte_LM`, una certa compagnia aerea invia ad ACMESky una o più offerte last-minute che ha attivato. Quindi, ACMESky verifica nuovamente la presenza di una corrispondenza tra il nuovo insieme di offerte memorizzate e gli interessi specificate dai suoi clienti fino a quel momento; a seconda che la verifica abbia esito positivo o meno, si eseguono le stesse comunicazioni di invio e inoltro delle offerte viste nella sezione precedente.
 
 Sebbene trattasi delle stesse comunicazioni, abbiamo deciso di chiamarle diversamente (`invio_offerte_LM` e `inoltro_offerte_LM`), al fine di evitare problemi di concorrenza: dato che la 2° e 4° sotto-coreografia sono in esecuzione parallela, nello stesso istante potrebbero essere eseguite le stesse comunicazioni tra gli stessi partecipanti, mentre cambiandone il nome non si pone il problema.
 
 <!-- theme: warning -->
-> Abbiamo aggiunto un'altra volta la notazione `...` per catturare il fatto che ciascuna compagnia aerea convenzionata possa inviare un'offerta LM in qualsiasi momento.
+> Abbiamo aggiunto un'altra volta la notazione `...` per catturare il fatto che ciascuna compagnia aerea convenzionata possa inviare offerte LM in qualsiasi momento.
 
 
 ### Acquisto biglietto
@@ -142,17 +142,17 @@ title: "Sotto-coreografia: acquisto_offerta"
 ```javascript
 acquisto_offerta ::= invio_codice_offerta: cliente --> acmesky ;
 (notifica_errore_codice: acmesky --> cliente) +
-(richiesta_link_pagamento: acmesky --> fornitore_servizi_bancari;
+(richiesta_link_pagamento: acmesky --> fornitore_servizi_bancari ;
 invio_link_pagamento: fornitore_servizi_bancari --> acmesky;
 inoltro_link_pagamento: acmesky --> cliente ;
 pagamento: cliente --> fornitore_servizi_bancari ;
-(notifica_errore_pagamento: fornitore_servizi_bancari --> cliente) +
+(notifica_errore_pagamento: fornitore_servizi_bancari --> cliente +
 ( (invio_quota_pagamento: fornitore_servizi_bancari  --> compagnia_aerea ;
 invio_biglietto: compagnia_aerea --> cliente) | 
 invio_quota_pagamento: fornitore_servizi_bancari --> acmesky ;
 1 + richiesta_distanza_domicilio_aeroporto: acmesky --> maps ;
 1 + (proposta_trasferimento: acmesky --> cliente ; 
-1 + richiesta_distanze_domicilio_compagnie_trasporto: acmesky --> maps ;
+1 + (richiesta_distanze_domicilio_compagnie_trasporto: acmesky --> maps ;
 prenotazione_trasferimento: acmesky --> compagnia_trasporto_vicina)))))
 ```
 Nell'ambito della comunicazione `invio_codice_offerta`, il cliente invia ad ACMESky il codice che identifica sè e l'offerta che intende acquistare; ACMESky verifica la correttezza del codice ricevuto:
@@ -161,7 +161,7 @@ Nell'ambito della comunicazione `invio_codice_offerta`, il cliente invia ad ACME
   - in caso il pagamento sia fallito, il fornitore dei servizi bancari lo notifica al cliente;
   - in caso il pagamento abbia avuto successo, il fornitore dei servizi bancari, in parallelo, invia la quota dovuta alla compagnia aerea e ad ACMESky, con la comunicazione `invio_quota_pagamento`;
     - dopo che la compagnia aerea ha ricevuto la sua quota, con la comunicazione `invio_biglietto`, invia il biglietto dell'offerta acquistata al cliente;
-    - non appena ACMESky ha ricevuto la sua quota, verifica che sussistano le condizioni per proporre al cliente il servizio di trasporto, mediante le operazioni  e, in caso positivo, invia la proposta al cliente con la comunicazione `proposta_trasferimento`: nel caso l'utente rifiuti, non segue alcuna comunicazione, diversamente ACMESky con la comunicazione `prenotazione_trasferimento` effettua la prenotazione con la compagnia di trasporto selezionata. 
+    - non appena ACMESky ha ricevuto la sua quota, verifica che sussistano le condizioni per proporre al cliente il servizio di trasporto (mediante `richiesta_distanza_domicilio_aeroporto`) e, in caso positivo, invia la proposta al cliente con la comunicazione `proposta_trasferimento`: nel caso l'utente rifiuti, non segue alcuna comunicazione, diversamente ACMESky con la comunicazione `richiesta_distanze_domicilio_compagnie_trasporto` richiede le distanze tra il domicilio del cliente e le sedi delle compagnie di trasporti e con `prenotazione_trasferimento` effettua la prenotazione con la compagnia di trasporto più vicina al domicilio del cliente. 
 
 
 ## Verifica delle condizioni di connectedness
@@ -216,17 +216,20 @@ richiesta_e_inoltro_offerte ::= (
    risposta_offerte: compagnia_aerea_a --> acmesky) | ... |
   (richiesta_offerte: acmesky --> compagnia_aerea_z ; 
    risposta_offerte: compagnia_aerea_z --> acmesky) ) ; 
-1 + ((invio_codice: acmesky --> prontogram ;
-inoltro_codice: prontogram --> cliente_1) ; ... ; 
+1 + (
 (invio_codice: acmesky --> prontogram ;
-inoltro_codice: prontogram --> cliente_n))
+inoltro_codice: prontogram --> cliente_1 ; 
+ack: prontogram --> acmesky) ; ... ; 
+(invio_codice: acmesky --> prontogram ;
+inoltro_codice: prontogram --> cliente_n ;
+ack: prontogram --> acmesky)))
 ```
 
 La comunicazione `richiesta_offerte` è connessa per sequenza con l'operazione seguente in quanto **b = c**.
 
-La comunicazione `risposta_offerte` è connessa per la sequenza con `invio_offerte` in quanto **b = c** e con la comunicazione nulla (`1`). Vi è connessione per la scelta seguente, essendo uno dei due branch 1.
+La comunicazione `risposta_offerte` è connessa per la sequenza con `invio_codice` in quanto **b = c** e con la comunicazione nulla (`1`). Vi è connessione per la scelta seguente, essendo uno dei due branch 1.
 
-La comunicazione `invio_offerte` è connessa per la sequenza con `inoltro_offerte`, in quanto **b = c**.
+La comunicazione `invio_codice` è connessa per la sequenza con `inoltro_codice`, in quanto **b = c**.
 
 ### Ricezione e inoltro offerte LM
 
@@ -237,15 +240,19 @@ title: "Sotto-coreografia: ricezione_e_inoltro_offerte_LM"
 ricezione_e_inoltro_offerte_LM ::= (
   invio_offerte_LM: compagnia_aerea_a --> acmesky ;
   1 + ((invio_codice_LM: acmesky --> prontogram ; 
-  inoltro_codice_LM: prontogram --> cliente_1a) ; ... ;
+  inoltro_codice_LM: prontogram --> cliente_1a ;
+  ack: prontogram --> acmesky)) ; ... ;
   (invio_codice_LM: acmesky --> prontogram ; 
-  inoltro_codice_LM: prontogram --> cliente_na)) ) | 
+  inoltro_codice_LM: prontogram --> cliente_na ; 
+  ack: prontogram --> acmesky))) ) | 
   ... |
   (invio_offerte_LM: compagnia_aerea_z --> acmesky ;
   1 + ((invio_codice_LM: acmesky --> prontogram ; 
-  inoltro_codice_LM: prontogram --> cliente_1z) ; ... ;
+  inoltro_codice_LM: prontogram --> cliente_1z ; 
+  ack: prontogram --> acmesky)) ; ... ;
   (invio_codice_LM: acmesky --> prontogram ; 
-  inoltro_codice_LM: prontogram --> cliente_nz)) )
+  inoltro_codice_LM: prontogram --> cliente_nz ; 
+  ack: prontogram --> acmesky))) )
 ```
 
 La comunicazione `invio_offerte_LM` è connessa per sequenza con `invio_codice_LM` in quanto **b = c** e con `1`. La scelta seguente è connessa, essendo uno dei due branch `1`.
@@ -259,34 +266,44 @@ title: "Sotto-coreografia: acquisto_offerta"
 ```javascript
 acquisto_offerta ::= invio_codice_offerta: cliente --> acmesky ;
 (notifica_errore_codice: acmesky --> cliente) +
-(richiesta_link_pagamento: acmesky --> fornitore_servizi_bancari;
+(richiesta_link_pagamento: acmesky --> fornitore_servizi_bancari ;
 invio_link_pagamento: fornitore_servizi_bancari --> acmesky;
 inoltro_link_pagamento: acmesky --> cliente ;
 pagamento: cliente --> fornitore_servizi_bancari ;
-(notifica_errore_pagamento: fornitore_servizi_bancari --> cliente) +
+(notifica_errore_pagamento: fornitore_servizi_bancari --> cliente +
 ( (invio_quota_pagamento: fornitore_servizi_bancari  --> compagnia_aerea ;
 invio_biglietto: compagnia_aerea --> cliente) | 
 invio_quota_pagamento: fornitore_servizi_bancari --> acmesky ;
 1 + richiesta_distanza_domicilio_aeroporto: acmesky --> maps ;
 1 + (proposta_trasferimento: acmesky --> cliente ; 
-1 + richiesta_distanze_domicilio_compagnie_trasporto: acmesky --> maps ;
+1 + (richiesta_distanze_domicilio_compagnie_trasporto: acmesky --> maps ;
 prenotazione_trasferimento: acmesky --> compagnia_trasporto_vicina)))))
 ```
-La comunicazione `invio_codice_offerta` è connessa per sequenza con i due branch seguenti, in quanto, in entrambi i casi, **b = c**. L'operatore di scelta successivo è connesso in quanto i partecipanti delle operazioni dei due branch sono gli stessi.
+La comunicazione `invio_codice_offerta` è connessa per sequenza con i due branch seguenti, in quanto, in entrambi i casi, **b = c**. L'operatore di scelta successivo è connesso in quanto i due branch hanno in comune l'iniziatore.
 
-La comunicazione `invia_link_banca` è connessa per sequenza con l'operazione seguente in quanto **b = c**.
+La comunicazione `richiesta_link_pagamento` è connessa per sequenza con l'operazione seguente (`invio_link_pagamento`) in quanto **b = c**.
 
-La comunicazione `pagamento` è connessa per sequenza con i due branch seguenti, in quanto, in entrambi i casi, **b = c**.
+La comunicazione `invio_link_pagamento` è connessa per sequenza con l'operazione seguente (`inoltro_link_pagamento`) in quanto **b = c**.
+
+La comunicazione `inoltro_link_pagamento` è connessa per sequenza con l'operazione seguente (`pagamento`) in quanto **b = c**.
+
+La comunicazione `pagamento` è connessa per sequenza con i due branch seguenti (`notifica_errore_pagamento` e `invio_quota_pagamento`), in quanto, in entrambi i casi, **b = c**.
 
 Le comunicazioni `notifica_errore_pagamento` e `invio_quota_pagamento` sono connesse per scelta in quanto hanno in comune l'iniziatore.
 
-La comunicazione `invio_quota_pagamento` è connessa per sequenza con l'operazione seguente in quanto **b = c**.
+La comunicazione `invio_quota_pagamento` è connessa per sequenza con l'operazione seguente (`invio_biglietto`) in quanto **b = c**.
 
-Seguitamente, la comunicazione `invio_quota_pagamento` è connessa per sequenza tanto con `1` quanto con `proposta_trasferimento` in quanto **b = c**.
+Seguitamente, la comunicazione `invio_quota_pagamento` è connessa per sequenza tanto con `1` quanto con `richiesta_distanza_domicilio_aeroporto` in quanto **b = c**.
 
-Ancora, la comunicazione `proposta_trasferimento` è connessa per sequenza tanto con `1` quanto con `prenotazione_trasferimento` in quanto **a = c**
+La comunicazione `richiesta_distanza_domicilio_aeroporto` è connessa per sequenza tanto con `1` quanto con `proposta_trasferimento` in quanto **a = c**.
 
-Entrambi i due ultimi operatori di scelta sono connessi, essendo uno dei due branch `1`.
+La comunicazione `proposta_trasferimento` è connessa per sequenza tanto con `1` quanto con `proposta_trasferimento` in quanto **a = c**.
+
+Ancora, la comunicazione `proposta_trasferimento` è connessa per sequenza tanto con `1` quanto con `richiesta_distanze_domicilio_compagnie_trasporto` in quanto **a = c**
+
+Gli ultimi tre operatori di scelta sono connessi, essendo uno dei due branch `1`.
+
+La comunicazione `richiesta_distanze_domicilio_compagnie_trasporto` è connessa per sequenza con `prenotazione_trasferimento` in quanto **a = c**.
 
 Pertanto, possiamo concludere che l'intera coreografia risulta essere connessa secondo il pattern **Sender**.
 
