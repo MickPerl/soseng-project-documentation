@@ -12,13 +12,12 @@ C ::= invio_interesse: (cliente --> acmesky)*
 
 |
 
-(  ( (richiesta_offerte: acmesky --> compagnia_aerea_a ;
+(((richiesta_offerte: acmesky --> compagnia_aerea_a ;
       risposta_offerte: compagnia_aerea_a --> acmesky) | ... |
      (richiesta_offerte: acmesky --> compagnia_aerea_z ; 
       risposta_offerte: compagnia_aerea_z --> acmesky) ) ; 
-1 + ((invio_codice: acmesky --> prontogram ;
-inoltro_codice: prontogram --> cliente_1) ; ... ; 
-(invio_codice: acmesky --> prontogram ;
+1 + (invio_codici: acmesky --> prontogram ;
+(inoltro_codice: prontogram --> cliente_1 ; ... ; 
 inoltro_codice: prontogram --> cliente_n)))
 
 |     
@@ -73,9 +72,9 @@ title: "Sotto-coreografia: registrazione_interessi_utente"
 registrazione_interesse_utente ::= (invio_interesse: cliente --> acmesky)*
 ```
 
-Nell'ambito della comunicazione `invio_interesse`, il cliente esprime le sue esigenze relativamente al biglietto aereo di andata e ritorno che intende acquistare: in dettaglio, specifica il periodo in cui intende viaggiare (quindi finestra temporale per l'andata e finestra temporale per il ritorno) e il prezzo massimo che è disposto a pagare. 
+Nell'ambito della comunicazione `invio_interesse`, il cliente esprime le sue esigenze relativamente al biglietto aereo di andata (e ritorno) che intende acquistare: in dettaglio, specifica il periodo in cui intende viaggiare (quindi finestra temporale per l'andata ed eventualmente finestra temporale per il ritorno) e il prezzo massimo che è disposto a pagare. 
 
-Abbiamo contrassegnato la comunicazione con `*` affinché lo stesso cliente possa esprimere più volte le sue esigenze: dal suo canto, ACMESky, nel ricercare le offerte, considererà per ogni utente sempre e solo la sua ultima comunicazione.
+Abbiamo contrassegnato la comunicazione con `*` affinché lo stesso cliente possa esprimere più di un interesse, in momenti differenti.
 
 ### Richiesta e inoltro offerte
 
