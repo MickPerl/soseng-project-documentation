@@ -8,7 +8,7 @@ Abbiamo poi verificato le condizioni di connectedness e quindi proiettato l'outp
 La coreografia cui siamo giunti dopo numerosi confronti, riflessioni e iterazioni è presentata di seguito: 
 
 ```javascript
-C ::= invio_interessi: cliente --> acmesky
+C ::= invio_interesse: (cliente --> acmesky)*
 
 |
 
@@ -16,37 +16,42 @@ C ::= invio_interessi: cliente --> acmesky
       risposta_offerte: compagnia_aerea_a --> acmesky) | ... |
      (richiesta_offerte: acmesky --> compagnia_aerea_z ; 
       risposta_offerte: compagnia_aerea_z --> acmesky) ) ; 
-1 + (invio_codice: acmesky --> prontogram ;
-inoltro_codice: prontogram --> cliente_1 | ... |
-inoltro_codice: prontogram --> cliente_n)  )
+1 + ((invio_codice: acmesky --> prontogram ;
+inoltro_codice: prontogram --> cliente_1) ; ... ; 
+(invio_codice: acmesky --> prontogram ;
+inoltro_codice: prontogram --> cliente_n)))
 
 |     
 
-( (invio_offerte_LM: compagnia_aerea_a --> acmesky ;
-1 + (invio_codice_LM: acmesky --> prontogram ;
-inoltro_codice_LM: prontogram --> cliente_1a | ... |
-inoltro_codice_LM: prontogram --> cliente_na) ) | 
+((invio_offerte_LM: compagnia_aerea_a --> acmesky ;
+1 + ((invio_codice_LM: acmesky --> prontogram ; 
+inoltro_codice_LM: prontogram --> cliente_1a) ; ... ;
+(invio_codice_LM: acmesky --> prontogram ; 
+inoltro_codice_LM: prontogram --> cliente_na)) ) | 
 ... |
 (invio_offerte_LM: compagnia_aerea_z --> acmesky ;
-1 + (invio_codice_LM: acmesky --> prontogram ; 
-inoltro_codice_LM: prontogram --> cliente_1z | ... |
-inoltro_codice_LM: prontogram --> cliente_nz) ))
+1 + ((invio_codice_LM: acmesky --> prontogram ; 
+inoltro_codice_LM: prontogram --> cliente_1z) ; ... ;
+(invio_codice_LM: acmesky --> prontogram ; 
+inoltro_codice_LM: prontogram --> cliente_nz)) ))
 
 | 
 
 (invio_codice_offerta: cliente --> acmesky ;
 (notifica_errore_codice: acmesky --> cliente) +
-(invia_link_banca: acmesky --> cliente ;
+(richiesta_link_pagamento: acmesky --> fornitore_servizi_bancari;
+invio_link_pagamento: fornitore_servizi_bancari --> acmesky;
+inoltro_link_pagamento: acmesky --> cliente ;
 pagamento: cliente --> fornitore_servizi_bancari ;
 (notifica_errore_pagamento: fornitore_servizi_bancari --> cliente) +
 ( (invio_quota_pagamento: fornitore_servizi_bancari  --> compagnia_aerea ;
 invio_biglietto: compagnia_aerea --> cliente) | 
 invio_quota_pagamento: fornitore_servizi_bancari --> acmesky ;
+1 + richiesta_distanza_domicilio_aeroporto: acmesky --> maps ;
 1 + (proposta_trasferimento: acmesky --> cliente ; 
-1 + prenotazione_trasferimento: acmesky --> compagnia_trasporto_vicina) )))
+1 + richiesta_distanze_domicilio_compagnie_trasporto: acmesky --> maps ;
+prenotazione_trasferimento: acmesky --> compagnia_trasporto_vicina))))))
 ```
-AGGIUNGERE richiesta distanze prima di proposta e poi richiesta distanze per compagnia più vicina
-
 Per illustrare ogni punto di questa coreografia, l'articoliamo nei 4 blocchi seguenti.
 
 <!--
@@ -68,7 +73,7 @@ title: "Sotto-coreografia: registrazione_interessi_utente"
 registrazione_interesse_utente ::= (invio_interesse: cliente --> acmesky)*
 ```
 
-Nell'ambito della comunicazione `invio_interesse`, il cliente esprime le sue esigenze relativamente al biglietto aereo di andata e ritorno che intede acquistare: in dettaglio, specifica il periodo in cui intende viaggiare (quindi finestra temporale per l'andata e finestra temporale per il ritorno) e il prezzo massimo che è disposto a pagare. 
+Nell'ambito della comunicazione `invio_interesse`, il cliente esprime le sue esigenze relativamente al biglietto aereo di andata e ritorno che intende acquistare: in dettaglio, specifica il periodo in cui intende viaggiare (quindi finestra temporale per l'andata e finestra temporale per il ritorno) e il prezzo massimo che è disposto a pagare. 
 
 Abbiamo contrassegnato la comunicazione con `*` affinché lo stesso cliente possa esprimere più volte le sue esigenze: dal suo canto, ACMESky, nel ricercare le offerte, considererà per ogni utente sempre e solo la sua ultima comunicazione.
 
@@ -80,13 +85,13 @@ title: "Sotto-coreografia: richiesta_e_inoltro_offerte"
 ```javascript
 richiesta_e_inoltro_offerte ::= (
   (richiesta_offerte: acmesky --> compagnia_aerea_a ;
-   risposta_offerte: compagnia_aerea_a --> acmesky) |   
-... |
-  (richiesta_offerte: acmesky --> compagnia_aerea_z ;
+   risposta_offerte: compagnia_aerea_a --> acmesky) | ... |
+  (richiesta_offerte: acmesky --> compagnia_aerea_z ; 
    risposta_offerte: compagnia_aerea_z --> acmesky) ) ; 
-1 + (invio_offerte: acmesky --> prontogram ;
-inoltro_offerte: prontogram --> cliente_1 | ... |
-inoltro_offerte: prontogram --> cliente_n )
+1 + ((invio_codice: acmesky --> prontogram ;
+inoltro_codice: prontogram --> cliente_1) ; ... ; 
+(invio_codice: acmesky --> prontogram ;
+inoltro_codice: prontogram --> cliente_n))
 ```
 
 ACMESky, quotidianamente, ripete la comunicazione `richiesta_offerte`, entro cui chiede ad una singola compagnia aerea che le restituisca tutte le offerte attive. A questa comunicazione, ne segue un'altra, `risposta_offerte`, con cui la compagnia aerea contattata invia ad ACMESky quanto richiestole.
@@ -94,15 +99,13 @@ ACMESky, quotidianamente, ripete la comunicazione `richiesta_offerte`, entro cui
 <!-- theme: warning -->
 > Abbiamo adottato la notazione `...` al fine di catturare il fatto che le due comunicazioni appena descritte sono eseguite parallelamente per ogni compagnia aerea convenzionata con ACMESky.
 
-Dopo che la/le compagnia/e aerea/e hanno risposto, ACMESky verifica la presenza di una corrispondenza tra le offerte che gli sono giunte e le esigenze specificate dai suoi clienti fino a quel momento:
-- in caso affermativo, invia la/le offerta/e al servizio di messagistica Prontogram con la comunicazione `invio_offerte`; Prontogram, con la comunicazione `inoltro_offerte`, inoltrerà questa/e offerta/e al destinatario indicatogli;
+Dopo che la/le compagnia/e aerea/e hanno risposto, ACMESky verifica la presenza di corrispondenze tra le offerte che gli sono giunte e gli interessi dei suoi clienti che ha memorizzato fino a quel momento:
+- in caso affermativo, invia la/le offerta/e al servizio di messaggistica Prontogram con la comunicazione `invio_codice`; Prontogram, con la comunicazione `inoltro_codice`, inoltrerà questa/e offerta/e al suo destinatario; 
+  - abbiamo adottato la notazione `; ... ;` per esplicitare il fatto che l'invio del codice da Acmesky a Prontogram e l'inoltro di quest'ultimo al cliente avviene in maniera sequenziale per tutti i clienti destinatari di qualche codice offerta: trattasi di una forzatura implementativa, in quanto richiede ad Acmesky di fare una stima dei tempi di inoltro del codice al cliente da parte di Prontogram, prima di passare all'invio del codice successivo; tuttavia, abbiamo preferito questo approccio a quello di comunicazioni parallele per evitare problemi di concorrenza per l'operazione `invio_codice`;
 - in caso negativo, non segue alcuna comunicazione.
 
 <!-- theme: danger -->
-> in dettaglio, per ogni offerta, ACMESky invia a Prontogram una *descrizione* e tanti *codici* quanti sono i clienti destinatari: ogni codice individua univocamente la coppia offerta-cliente; se individuasse univocamente solo l'offerta, un qualsiasi cliente che ne ha ricevuto uno potrebbe diffonderlo, permettendo così anche soggetti di terzi di usufruire delle offerte: noi vogliamo che ACMESky abbia il pieno controllo sulle offerte inviate alla sua clientela in un certo momento, per cui vogliamo che un utente qualsiasi possa ottenere un codice valido solo per mezzo di ACMESky stesso. Un vantaggio di questa soluzione potrebbe essere la possibilità per ACMESky di condurre analisi di mercato, conoscendo esattamente i clienti a cui ha inviato le offerte e quanti hanno poi finalizzato l'acquisto.
-
-<!-- theme: warning -->
-> Abbiamo nuovamente adottato la notazione `...` per catturare il fatto che Prontogram eseguirà in parallelo l'operazione `inoltro_offerte` per ciascun cliente che gli è stato indicato nelle comunicazioni `invio_offerte`.
+> in dettaglio, per ogni offerta, ACMESky invia a Prontogram una *descrizione* e tanti *codici* quanti sono i clienti destinatari: ogni codice individua univocamente la coppia offerta-cliente; se individuasse univocamente solo l'offerta, un qualsiasi cliente che ne ha ricevuto uno potrebbe diffonderlo, permettendo così anche a soggetti terzi di usufruire delle offerte: noi vogliamo che ACMESky abbia il pieno controllo sulle offerte inviate alla sua clientela, per cui vogliamo che un utente qualsiasi possa ottenere un codice valido solo per sè e solo per mezzo di ACMESky stesso. Un vantaggio di questa soluzione potrebbe essere la possibilità per ACMESky di condurre analisi di mercato, conoscendo esattamente i clienti a cui ha inviato le offerte e quanti hanno poi finalizzato l'acquisto.
 
 ### Ricezione e inoltro offerte LM
 
@@ -111,15 +114,17 @@ title: "Sotto-coreografia: ricezione_e_inoltro_offerte_LM"
 -->
 ```javascript
 ricezione_e_inoltro_offerte_LM ::= (
-  last_minute: compagnia_aerea_a --> acmesky ;
-  1 + (invio_offerte_LM: acmesky --> prontogram ;
-  inoltro_offerte_LM: prontogram --> cliente_1a | ... |
-  inoltro_offerte_LM: prontogram --> cliente_na) ) | 
+  invio_offerte_LM: compagnia_aerea_a --> acmesky ;
+  1 + ((invio_codice_LM: acmesky --> prontogram ; 
+  inoltro_codice_LM: prontogram --> cliente_1a) ; ... ;
+  (invio_codice_LM: acmesky --> prontogram ; 
+  inoltro_codice_LM: prontogram --> cliente_na)) ) | 
   ... |
-  (last_minute: compagnia_aerea_z --> acmesky ;
-  1 + (invio_offerte_LM: acmesky --> prontogram ; 
-  inoltro_offerte_LM: prontogram --> cliente_1z | ... |
-  inoltro_offerte_LM: prontogram --> cliente_nz) )
+  (invio_offerte_LM: compagnia_aerea_z --> acmesky ;
+  1 + ((invio_codice_LM: acmesky --> prontogram ; 
+  inoltro_codice_LM: prontogram --> cliente_1z) ; ... ;
+  (invio_codice_LM: acmesky --> prontogram ; 
+  inoltro_codice_LM: prontogram --> cliente_nz)) )
 ```
 
 Nell'ambito della comunicazione `last_minute`, una certa compagnia aerea invia ad ACMESky una sua offerta last-minute. Quindi, ACMESky verifica nuovamente la presenza di una corrispondenza tra il nuovo insieme di offerte memorizzate e le esigenze specificate dai suoi clienti fino a quel momento; a seconda che la verifica abbia esito positivo o meno, si eseguono le stesse comunicazioni di invio e inoltro delle offerte viste nella sezione precedente.
@@ -137,22 +142,26 @@ title: "Sotto-coreografia: acquisto_offerta"
 ```javascript
 acquisto_offerta ::= invio_codice_offerta: cliente --> acmesky ;
 (notifica_errore_codice: acmesky --> cliente) +
-(invia_link_banca: acmesky --> cliente ;
+(richiesta_link_pagamento: acmesky --> fornitore_servizi_bancari;
+invio_link_pagamento: fornitore_servizi_bancari --> acmesky;
+inoltro_link_pagamento: acmesky --> cliente ;
 pagamento: cliente --> fornitore_servizi_bancari ;
 (notifica_errore_pagamento: fornitore_servizi_bancari --> cliente) +
 ( (invio_quota_pagamento: fornitore_servizi_bancari  --> compagnia_aerea ;
 invio_biglietto: compagnia_aerea --> cliente) | 
 invio_quota_pagamento: fornitore_servizi_bancari --> acmesky ;
+1 + richiesta_distanza_domicilio_aeroporto: acmesky --> maps ;
 1 + (proposta_trasferimento: acmesky --> cliente ; 
-1 + prenotazione_trasferimento: acmesky --> compagnia_trasporto_vicina) ))
+1 + richiesta_distanze_domicilio_compagnie_trasporto: acmesky --> maps ;
+prenotazione_trasferimento: acmesky --> compagnia_trasporto_vicina)))))
 ```
-Nell'ambito della comunicazione `invio_codice_offerta`, il cliente invia ad ACMESky il codice identificativo dell'offerta che intende acquistare; ACMESky verifica la correttezza del codice ricevuto:
+Nell'ambito della comunicazione `invio_codice_offerta`, il cliente invia ad ACMESky il codice che identifica sè e l'offerta che intende acquistare; ACMESky verifica la correttezza del codice ricevuto:
 - in caso sia scorretto, ACMESky lo notifica al cliente;
-- in caso sia corretto, mediante la comunicazione `invia_link_banca`, ACMESky invia al cliente il link al fornitore di servizi bancari cui si appoggia per i pagamenti; il cliente apre il link e, con la comunicazione `pagamento` realizza la transazione con il fornitore dei servizi bancari;
+- in caso sia corretto, mediante le comunicazioni `richiesta_link_pagamento` e `invio_link_pagamento`, Acmesky richiede e ottiene dal fornitore dei servizi bancari il link di pagamento che quindi inoltra con `inoltro_link_pagamento` al cliente; il cliente apre il link e, con la comunicazione `pagamento` realizza la transazione con il fornitore dei servizi bancari;
   - in caso il pagamento sia fallito, il fornitore dei servizi bancari lo notifica al cliente;
   - in caso il pagamento abbia avuto successo, il fornitore dei servizi bancari, in parallelo, invia la quota dovuta alla compagnia aerea e ad ACMESky, con la comunicazione `invio_quota_pagamento`;
     - dopo che la compagnia aerea ha ricevuto la sua quota, con la comunicazione `invio_biglietto`, invia il biglietto dell'offerta acquistata al cliente;
-    - non appena ACMESky ha ricevuto la sua quota, verifica che sussistano le condizioni per proporre al cliente il servizio di trasporto e, in caso positivo, invia la proposta al cliente con la comunicazione `proposta_trasferimento`: nel caso l'utente rifiuti, non segue alcuna comunicazione, diversamente ACMESky con la comunicazione `prenotazione_trasferimento` effettua la prenotazione con la compagnia di trasporto selezionata. 
+    - non appena ACMESky ha ricevuto la sua quota, verifica che sussistano le condizioni per proporre al cliente il servizio di trasporto, mediante le operazioni  e, in caso positivo, invia la proposta al cliente con la comunicazione `proposta_trasferimento`: nel caso l'utente rifiuti, non segue alcuna comunicazione, diversamente ACMESky con la comunicazione `prenotazione_trasferimento` effettua la prenotazione con la compagnia di trasporto selezionata. 
 
 
 ## Verifica delle condizioni di connectedness
@@ -184,7 +193,7 @@ Le diverse sotto-coreografie sono eseguite in parallelo: ai fini della connected
 ### Registrazione interessi utente
 
 <!--
-title: "Sotto-coreografia: registrazione_interessi_utente"
+title: "Sotto-coreografia: registrazione_interesse_utente"
 -->
 ```javascript
 registrazione_interesse_utente ::= (invio_interesse: cliente --> acmesky)*
@@ -205,11 +214,12 @@ title: "Sotto-coreografia: richiesta_e_inoltro_offerte"
 richiesta_e_inoltro_offerte ::= (
   (richiesta_offerte: acmesky --> compagnia_aerea_a ;
    risposta_offerte: compagnia_aerea_a --> acmesky) | ... |
-(richiesta_offerte: acmesky --> compagnia_aerea_z ;
-risposta_offerte: compagnia_aerea_z --> acmesky) ) ; 
-1 + (invio_offerte: acmesky --> prontogram ;
-inoltro_offerte: prontogram --> cliente_1 | ... |
-inoltro_offerte: prontogram --> cliente_n )
+  (richiesta_offerte: acmesky --> compagnia_aerea_z ; 
+   risposta_offerte: compagnia_aerea_z --> acmesky) ) ; 
+1 + ((invio_codice: acmesky --> prontogram ;
+inoltro_codice: prontogram --> cliente_1) ; ... ; 
+(invio_codice: acmesky --> prontogram ;
+inoltro_codice: prontogram --> cliente_n))
 ```
 
 La comunicazione `richiesta_offerte` è connessa per sequenza con l'operazione seguente in quanto **b = c**.
@@ -225,20 +235,22 @@ title: "Sotto-coreografia: ricezione_e_inoltro_offerte_LM"
 -->
 ```javascript
 ricezione_e_inoltro_offerte_LM ::= (
-  last_minute: compagnia_aerea_a --> acmesky ;
-1 + (invio_offerte_LM: acmesky --> prontogram ;
-inoltro_offerte_LM: prontogram --> cliente_1a | ... |
-inoltro_offerte_LM: prontogram --> cliente_na) ) | 
-... |
-(last_minute: compagnia_aerea_z --> acmesky ;
-1 + (invio_offerte_LM: acmesky --> prontogram ; 
-inoltro_offerte_LM: prontogram --> cliente_1z | ... |
-inoltro_offerte_LM: prontogram --> cliente_nz) )
+  invio_offerte_LM: compagnia_aerea_a --> acmesky ;
+  1 + ((invio_codice_LM: acmesky --> prontogram ; 
+  inoltro_codice_LM: prontogram --> cliente_1a) ; ... ;
+  (invio_codice_LM: acmesky --> prontogram ; 
+  inoltro_codice_LM: prontogram --> cliente_na)) ) | 
+  ... |
+  (invio_offerte_LM: compagnia_aerea_z --> acmesky ;
+  1 + ((invio_codice_LM: acmesky --> prontogram ; 
+  inoltro_codice_LM: prontogram --> cliente_1z) ; ... ;
+  (invio_codice_LM: acmesky --> prontogram ; 
+  inoltro_codice_LM: prontogram --> cliente_nz)) )
 ```
 
-La comunicazione `last_minute` è connessa per sequenza con `invio_offerte_LM` in quanto **b = c** e con `1`. La scelta seguente è connessa, essendo uno dei due branch `1`.
+La comunicazione `invio_offerte_LM` è connessa per sequenza con `invio_codice_LM` in quanto **b = c** e con `1`. La scelta seguente è connessa, essendo uno dei due branch `1`.
 
-La comunicazione `invio_offerte_LM` è connessa per sequenza con l'operazione seguente in quanto **b = c**.
+La comunicazione `invio_codice_LM` è connessa per sequenza con l'operazione seguente in quanto **b = c**.
 
 ### Acquisto biglietto
 <!--
@@ -247,14 +259,18 @@ title: "Sotto-coreografia: acquisto_offerta"
 ```javascript
 acquisto_offerta ::= invio_codice_offerta: cliente --> acmesky ;
 (notifica_errore_codice: acmesky --> cliente) +
-(invia_link_banca: acmesky --> cliente ;
+(richiesta_link_pagamento: acmesky --> fornitore_servizi_bancari;
+invio_link_pagamento: fornitore_servizi_bancari --> acmesky;
+inoltro_link_pagamento: acmesky --> cliente ;
 pagamento: cliente --> fornitore_servizi_bancari ;
 (notifica_errore_pagamento: fornitore_servizi_bancari --> cliente) +
 ( (invio_quota_pagamento: fornitore_servizi_bancari  --> compagnia_aerea ;
 invio_biglietto: compagnia_aerea --> cliente) | 
 invio_quota_pagamento: fornitore_servizi_bancari --> acmesky ;
+1 + richiesta_distanza_domicilio_aeroporto: acmesky --> maps ;
 1 + (proposta_trasferimento: acmesky --> cliente ; 
-1 + prenotazione_trasferimento: acmesky --> compagnia_trasporto_vicina) ))
+1 + richiesta_distanze_domicilio_compagnie_trasporto: acmesky --> maps ;
+prenotazione_trasferimento: acmesky --> compagnia_trasporto_vicina)))))
 ```
 La comunicazione `invio_codice_offerta` è connessa per sequenza con i due branch seguenti, in quanto, in entrambi i casi, **b = c**. L'operatore di scelta successivo è connesso in quanto i partecipanti delle operazioni dei due branch sono gli stessi.
 
