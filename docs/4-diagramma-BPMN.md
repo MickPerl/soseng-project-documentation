@@ -1,8 +1,8 @@
 # Diagramma BPMN
 
 Il modello BPMN cui siamo giunti è qui riportato:
-![Diagramma BPMN](
- "Diagramma BPMN")
+[![Diagramma BPMN](https://github.com/MickPerl/soseng-project-documentation/blob/master/assets/images/BPMN_totale.png?raw=true
+ "Diagramma BPMN")](https://github.com/MickPerl/soseng-project-documentation/blob/master/assets/images/BPMN_totale.png?raw=true)
 
 Per una maggiore chiarezza, articoliamo anche la trattazione del diagramma BPMN nelle medesime 4 parti individuate a partire dalla spiegazione della coreografia:
 - Registrazione degli interessi degli utenti;
@@ -15,6 +15,9 @@ Questa parte attiene alle seguenti attività:
 1. L'utente invia i propri interessi ad ACMESky: in caso ACMESky entro un minuto non gli notifichi il salvataggio riuscito degli interessi che ha inviato, ritenta l'invio per un certo numero di tentativi;
 2. ACMESky salva gli interessi ricevuti e notifica il salvataggio riuscito al cliente.
 
+[![BPMN della registrazione degli interessi degli utenti](https://github.com/MickPerl/soseng-project-documentation/blob/master/assets/images/BPMN_registrazione_interessi.png?raw=true
+ "BPMN della registrazione degli interessi degli utenti")](https://github.com/MickPerl/soseng-project-documentation/blob/master/assets/images/BPMN_registrazione_interessi.png?raw=true)
+
 
 ## Richiesta delle offerte e inoltro
 Questa parte attiene alle seguenti attività:
@@ -24,13 +27,17 @@ Questa parte attiene alle seguenti attività:
 4. ACMESky invia a Prontogram le offerte (descrizione + codice) che incontrano gli interessi di qualche utente;
 5. Prontogram inoltra le offerte agli utenti corrispondenti.
 
-
+[![BPMN della richiesta e inoltro delle offerte](https://github.com/MickPerl/soseng-project-documentation/blob/master/assets/images/BPMN_richiesta_inoltro_offerte.png?raw=true
+ "BPMN della richiesta e inoltro delle offerte")](https://github.com/MickPerl/soseng-project-documentation/blob/master/assets/images/BPMN_richiesta_inoltro_offerte.png?raw=true)
 
 ## Ricezione delle offerte LM e inoltro
 Questa parte attiene alle seguenti attività:
 1. Le compagnie aeree inviano ad ACMESky le offerte last-minute non appena le attivano;
 2. ACMESky memorizza le offerte LM ricevute;
 3. Punti 3-4-5 della sezione "Richiesta delle offerte e inoltro".
+
+[![BPMN della ricezione e inoltro delle offerte LM](https://github.com/MickPerl/soseng-project-documentation/blob/master/assets/images/BPMN_ricezione_inoltro_offerteLM.png?raw=true
+ "BPMN della ricezione e inoltro delle offerte LM")](https://github.com/MickPerl/soseng-project-documentation/blob/master/assets/images/BPMN_ricezione_inoltro_offerteLM.png?raw=true)
 
 ## Acquisto offerta
 Questa parte attiene alle seguenti attività:
@@ -39,4 +46,7 @@ Questa parte attiene alle seguenti attività:
 3. il fornitore dei servizi bancari invia le quote spettanti ad Acmesky e alla compagnia aerea interessata, la quale procede quindi ad inviare all'utente il biglietto acquistato;
 4. dopo aver ricevuto la parte che gli spetta dal fornitore dei servizi bancari, Acmesky contrassegna il codice offerta-cliente acquistato come utilizzato;
 5. Acmesky controlla il prezzo dell'offerta acquistata: nel caso superi le 1000 euro, verifica, servendosi delle API di GMaps, che la casa dell'utente disti dall'aeroporto di interesse non più di 30 km, nel caso in cui chiede all'utente se vuole il servizio di trasporto con la navetta;
-6. nel caso l'utente risponda affermativamente, Acmesky, servendosi delle API di GMaps, raccoglie le distanze tra le compagnie di trasporto e il domicilio dell'utente, per poi prenotare il servizio di trasporto presso la compagnia più vicina.<>
+6. nel caso l'utente risponda affermativamente, Acmesky, servendosi delle API di GMaps, raccoglie le distanze tra le compagnie di trasporto e il domicilio dell'utente, per poi prenotare il servizio di trasporto presso la compagnia più vicina.
+
+[![BPMN relativo all'acquisto dell'offerta](https://github.com/MickPerl/soseng-project-documentation/blob/master/assets/images/BPMN_acquisto_offerta.png?raw=true
+ "BPMN relativo all'acquisto dell'offerta")](https://github.com/MickPerl/soseng-project-documentation/blob/master/assets/images/BPMN_acquisto_offerta.png?raw=true)
