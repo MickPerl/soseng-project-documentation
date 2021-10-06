@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: compagniaAereaAPI
   version: '1.0'
-  description: È l'API Restful offerta dalla compagnia aerea che permette di fruire alla capability di restituire le offerte attive e di riceve la quota del pagamento del cliente.
+  description: È l'API Restful offerta dalla compagnia aerea che permette di restituire le offerte attive, creare voli last minute e di ricevere la quota del pagamento del cliente.
 servers:
   - url: 'https://stoplight.io/mocks/soseng-unibo/soseng-project-documentation/7424067'
     description: testing
@@ -50,7 +50,7 @@ paths:
                   value:
                     flights:
                       - departure-from: BLQ
-                        takeoff: '2020-04-27, 10.00AM, CET'
+                        takeoff: '27/04/2020, 10:00AM, CET'
                         destination: BCN
                         price:
                           value: 100
@@ -61,8 +61,72 @@ paths:
         '500':
           description: Internal Server Error
       operationId: get-flights
-      description: È la risorsa che restituisce tutte le offerte di voli attive.
+      description: È la risorsa che restituisce tutte le offerte di voli attive, compresi i voli last minute.
       parameters: []
+
+  /LMflight:
+    summary: Crea un volo last minute
+    post:
+      summary: Crea un volo last minute
+      operationId: post-lmflight
+      responses:
+        default:
+          description: Default error sample response
+        '200':
+          description: OK
+        '400':
+          description: CLIENT ERROR
+        '500':
+          description: SERVER ERROR
+      security:
+          - companytoken: []
+      requestBody:
+          content:
+            application/json:
+              schema:
+                description: ''
+                title: lmflight
+                type: object
+                properties:
+                  flight:
+                    type: object
+                    properties:
+                      departure-from:
+                        type: string
+                      takeoff:
+                        type: string
+                      destination:
+                        type: string
+                      price:
+                        type: object
+                        properties:
+                          amount:
+                            type: number
+                          currency:
+                            type: string
+                      offer_code:
+                        type: string
+                        description: Codice identificativo dell'offerta
+                  companyname:
+                    type: string
+              examples:
+                Esempio:
+                  value:
+                    flight:
+                      departure-from: BLQ
+                      takeoff: '27/04/2020, 10:00AM, CET'
+                      destination: BGY
+                      price:
+                        amount: 100
+                        currency: €
+                      offer_code: ryan102
+                    companyname: ryanair
+
+      tags:
+          - Risorse
+      description: Endpoint che permette di creare un volo lastminute, specificando tutti i parametri del volo; il server lo inoltrerà poi ad acmesky
+      parameters: []
+
   /notifypayment:
     post:
       summary: Ricevi pagamento
@@ -76,7 +140,6 @@ paths:
         content:
           application/json:
             schema:
-              description: ''
               type: object
               properties:
                 offer_code:
@@ -106,7 +169,7 @@ paths:
             examples:
               Esempio:
                 value:
-                  offer_code: ryan253
+                  offer_code: ryanair253
                   customer:
                     name: Mario Rossi
                     email: mariorossi@gmail.com
@@ -114,7 +177,7 @@ paths:
                     value: 100
                     currency: €
                   transaction:
-                    date: '2020-05-22, 13.45PM, CET'
+                    date: '27/04/2020, 10:00AM, CET'
                     id: 2542
         description: ''
       description: È la risorsa che permette al fornitore dei servizi bancari di inviare alla compagnia aerea la quota del pagamento ricevuto dal cliente per l'acquisto dell'offerta.
@@ -148,7 +211,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: ./maps.v1.yaml#/components/schemas/credentials
+              $ref: '#/components/schemas/Maps.v1_Credentials'
             examples:
               Esempio:
                 value:
@@ -158,10 +221,18 @@ paths:
       tags:
         - Risorse
 components:
-  schemas: {}
+  schemas:
+    Maps.v1_Credentials:
+      title: credentials
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
   securitySchemes:
     companytoken:
-      name: abcd12!
+      name: authtoken
       type: apiKey
       in: header
       description: Schema di sicurezza per permettere solo ai clienti opportunatamente autenticati di inviare il pagamento.

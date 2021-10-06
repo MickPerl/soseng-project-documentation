@@ -7,6 +7,36 @@ servers:
   - url: 'https://soseng-unibo.stoplight.io/mocks/soseng-unibo/soseng-project-documentation/6636887'
     description: testing
 paths:
+  /register:
+    post:
+      summary: Registra un nuovo utente
+      operationId: post-register
+      description: Registra un nuovo utente; prende in input solo un nome utente e una password
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+          headers: {}
+        '406':
+          description: Not Acceptable
+        '415':
+          description: Unsupported Media Type
+        '500':
+          description: Server Error
+      requestBody:
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/RegisterBody'
+            examples:
+              Esempio:
+                value:
+                  data:
+                    username: mrossi85
+                    password: 12345678
   /message:
     get:
       summary: Restituisci tutti i messaggi
@@ -16,7 +46,7 @@ paths:
       description: |-
         È la risorsa che, a fronte di una richiesta HTTP nella cui intestazione vi è un `token` identificativo valido, restituisce tutti i messaggi (in blocchi di cardinalità 20) accessibili al fruitore (utente o ACMESky) identificato da quel token: in dettaglio, l'utente ha accesso solo ai messaggi di cui è destinatario, mentre ACMESky ha accesso a tutti i messaggi che ha inoltrato ai suoi utenti mediante Prontogram (potrebbe richiederli per fini statistici, ad esempio).
 
-        l body della risposta HTTP è di tipo `application/vnd.api+json` in quanto l'API prontogramAPI è al livello 3 di modello di maturità di Richardson: con la risposta sono restituiti anche i campi `links` per permettere l'esplorazione dinamica, come richiesto da RMML3.
+        Il body della risposta HTTP è di tipo `application/vnd.api+json` in quanto l'API prontogramAPI è al livello 3 di modello di maturità di Richardson: con la risposta sono restituiti anche i campi `links` per permettere l'esplorazione dinamica, come richiesto da RMML3.
       security:
         - tokenSessione: []
       responses:
@@ -119,10 +149,6 @@ paths:
           description: Not Acceptable
         '415':
           description: Unsupported Media Type
-      parameters:
-        - $ref: '#/components/parameters/AuthorizationOauth2'
-    parameters:
-      - required: true
   /createmessage:
     post:
       summary: Invia messaggio
@@ -140,8 +166,6 @@ paths:
         '415':
           description: Unsupported Media Type
       description: 'È la risorsa che, a fronte di una richiesta HTTP nella cui intestazione vi è un `token` identificativo valido, invia un messaggio il cui corpo e destinatario sono quelli specificati nel body della richiesta HTTP.'
-      parameters:
-        - $ref: '#/components/parameters/AuthorizationOauth2'
       security:
         - tokenSessione: []
       requestBody:
@@ -150,6 +174,7 @@ paths:
             schema:
               description: ''
               type: object
+              title: message
               properties:
                 data:
                   type: object
@@ -164,11 +189,67 @@ paths:
                   data:
                     receiver: Mario rossi
                     offer:
-                      description: 'Roma - Berlino, Classe Premium'
+                      description: 'Roma - Berlino, 20/12/2021, 200$, ryanair1234'
                       code: '1234'
         description: Il body della richiesta HTTP è di tipo `application/vnd.api+json` in quanto l'API prontogramAPI è al livello 3 di modello di maturità di Richardson.
       tags:
         - Risorse
+
+  /createmessages:
+    post:
+      summary: Invia messaggi
+      operationId: post-createmessages
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+          headers: {}
+        '406':
+          description: Not Acceptable
+        '415':
+          description: Unsupported Media Type
+      description: 'È la risorsa che, a fronte di una richiesta HTTP nella cui intestazione vi è un `token` identificativo valido, invia un messaggio il cui corpo e destinatario sono quelli specificati nel body della richiesta HTTP. A differenza di /createmessage, questo endpoint supporta l''invio di più messaggi alla volta'
+      security:
+        - tokenSessione: []
+      requestBody:
+        content:
+          application/vnd.api+json:
+            schema:
+              description: ''
+              type: object
+              title: message_list
+              properties:
+                messages:
+                  type: array
+                  items:
+                    title: message_item
+                    type: object
+                    properties:
+                      receiver:
+                        type: string
+                      offer:
+                        $ref: '#/components/schemas/offerMessage'
+            examples:
+              Esempio:
+                value:
+                  message_list:
+                    - message_item:
+                        receiver: Mario Neri
+                        offer:
+                          description: 'Roma - Berlino, 20/12/2021, 200$, ryanair123'
+                          code: '1234'
+                    - message_item:
+                        receiver: Mario Bianchi
+                        offer:
+                          description: 'Bologna - Madrid, 20/12/2021, 150$, ryanair456'
+                          code: '7890'
+        description: Il body della richiesta HTTP è di tipo `application/vnd.api+json` in quanto l'API prontogramAPI è al livello 3 di modello di maturità di Richardson.
+      tags:
+        - Risorse
+
   '/message/{username}':
     parameters:
       - schema:
@@ -202,8 +283,6 @@ paths:
         È la risorsa che, a fronte di una richiesta HTTP nella cui intestazione vi è un `token` identificativo valido, restituisce i primi 20 messaggi inviati al cliente il cui username è pari al parametro di query `username`.
 
         In caso la richiesta HTTP abbia esito positivo, la risposta è un reindirizzamento alla risorsa `/message/{username}/from/0`
-      parameters:
-        - $ref: '#/components/parameters/AuthorizationOauth2'
   '/message/{username}/from/{messageid}':
     parameters:
       - schema:
@@ -237,7 +316,7 @@ paths:
                     properties:
                       message:
                         type: array
-                        uniqueItems: true
+                        #uniqueItems: true
                         items:
                           type: object
                           properties:
@@ -313,8 +392,6 @@ paths:
         È la risorsa che, a fronte di una richiesta HTTP nella cui intestazione vi è un `token` identificativo valido, restituisce i 10 messaggi successivi a quello con id pari al parametro di query `messageId` e inviati al cliente il cui username è pari al parametro di query `username`.
 
         Il body della richiesta e della risposta HTTP è di tipo `application/vnd.api+json` in quanto l'API prontogramAPI è al livello 3 di modello di maturità di Richardson: nella risposta sono presenti anche i campi `links` per permettere l'esplorazione dinamica, come richiesto da RMML3.
-      parameters:
-        - $ref: '#/components/parameters/AuthorizationOauth2'
   '/message/{username}/{messageid}':
     parameters:
       - schema:
@@ -369,7 +446,7 @@ paths:
                     data:
                       sender: ACMEsky
                       offer:
-                        description: 'Roma - Berlino, Classe Premium'
+                        description: 'Roma - Berlino, 20/12/2021, 200$, ryanair1234'
                         code: '1234'
                       date: '2021-03-04, 21:25 CET'
                     links:
@@ -389,8 +466,6 @@ paths:
         È la risorsa che, a fronte di una richiesta HTTP nella cui intestazione vi è un `token` identificativo valido, restituisce il messaggio con id pari al parametro di query `messageid` inviato al cliente il cui username è pari al parametro di query `username`.
 
         Il body della richiesta e della risposta HTTP è di tipo `application/vnd.api+json` in quanto l'API prontogramAPI è al livello 3 di modello di maturità di Richardson: nella risposta sono presenti anche i campi `links` per permettere l'esplorazione dinamica, come richiesto da RMML3.
-      parameters:
-        - $ref: '#/components/parameters/AuthorizationOauth2'
   /login:
     post:
       summary: Autentica un cliente
@@ -416,30 +491,21 @@ paths:
           description: Bad Request
         '500':
           description: Internal Server Error
-      description: È la risorsa che permette al cliente o ad ACMESky di ottenere il token temporaneo tramite cui potranno essere identificati e autorizzati da Prontogram.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: ./maps.v1.yaml#/components/schemas/credentials
-            examples:
-              Esempio:
-                value:
-                  username: Mario
-                  password: st1222a2aring
+      description: 'È la risorsa che permette al cliente o ad ACMESky di ottenere il token temporaneo tramite cui potranno essere identificati e autorizzati da Prontogram.'
+
       tags:
         - Risorse
+      security:
+        - basicAuth: []
+
 components:
   securitySchemes:
     tokenSessione:
-      type: oauth2
-      flows:
-        authorizationCode:
-          authorizationUrl: ''
-          tokenUrl: ''
-          refreshUrl: ''
-          scopes: {}
-      description: Abbiamo utilizzato OAuth2 come schema di sicurezza perché consente di creare un token di sessione che permette agli utenti di essere identificati da Prontogram e di fruire dei servizi che espone.
+      type: http
+      scheme: bearer
+    basicAuth:
+      type: http
+      scheme: basic
   schemas:
     offerMessage:
       title: offerMessage
@@ -452,6 +518,23 @@ components:
         description:
           type: string
           description: Breve descrizione dell'offerta
+    Maps.v1_Credentials:
+      title: credentials
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    RegisterBody:
+      title: RegisterBody
+      description: Body della richiesta di registrazione
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
   parameters:
     AuthorizationOauth2:
       name: AuthorizationOauth2

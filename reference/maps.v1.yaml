@@ -18,11 +18,11 @@ paths:
             application/json:
               schema:
                 description: ''
+                title: distance_result
                 type: object
                 properties:
                   distance:
                     type: array
-                    uniqueItems: true
                     minItems: 1
                     items:
                       type: object
@@ -60,6 +60,7 @@ paths:
           application/json:
             schema:
               description: ''
+              title: geo_body
               type: object
               properties:
                 pointA:
@@ -68,7 +69,6 @@ paths:
                 pointsB:
                   type: array
                   description: Array di punti geografici di destinazione
-                  uniqueItems: false
                   items:
                     type: string
             examples:
@@ -83,10 +83,6 @@ paths:
                   pointsB:
                     - 'Via Garibaldi, 1, 12345, Roma'
                     - 'Via Bologna, 1, 12345, Roma'
-          application/xhtml+xml:
-            schema:
-              type: object
-              properties: {}
         description: Specifica un punto geografico di partenza e un array di uno o più punti di arrivo.
       parameters: []
       security:
@@ -103,6 +99,7 @@ paths:
           content:
             application/json:
               schema:
+                title: registerMaps
                 type: object
                 properties:
                   token:
@@ -140,8 +137,6 @@ components:
           type: string
   securitySchemes:
     authorization:
-      name: auth
-      type: apiKey
-      in: header
-security:
-  - API Key - 1: []
+      type: http
+      scheme: basic
+      description: 'Questo schema di sicurezza richiede al client che nella richiesta HTTP passi anche l''header *Authorization* con le sue credenziali, nella forma di "Basic token": lo abbiamo introdotto perché vogliamo che tale API sia fruibile solo da soggetti con cui il *Fornitore delle distanze geografiche* ha preso accordi (nel nostro caso le credenziali di accesso saranno date solo ad *ACMESky*).'
