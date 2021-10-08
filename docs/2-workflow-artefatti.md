@@ -7,7 +7,7 @@ Di seguito, riportiamo le fasi salienti per la realizzazione del progetto, artic
 La prima attività che abbiamo compiuto è stata la lettura attenta della descrizione del dominio e del problema.<br>
 Una volta individuati i partecipanti coinvolti e le operazioni svolte, abbiamo proceduto col modellare le comunicazioni dello scenario usando una **coreografia**: per la sua definizione formale ci siamo serviti di un *process calculi*, essendo più accurato di WS-CDL (Web Services Choreography Description Language) e della formalizzazione per le coreografie di BPMN; mediante il formalismo del *process calculi*, abbiamo potuto comprendere in maniera puntuale quanto accade nello scenario, nonchè raffinare la coreografia stessa per migliorarne le *proprietà di connectedness*. Queste ultime sappiamo essere proprietà sufficienti (e non necessarie) a garantire che la successiva **proiezione in un sistema di ruoli** sia corretta.
 
-[Link alla coreografia e alle proiezioni](./3-coreografia.md "Clicca per andare agli artefatti corrispondenti")
+[Link alla coreografia e alle proiezioni](docs/3-coreografia.md "Clicca per andare agli artefatti corrispondenti")
 
 ### 2. Modellazione dei processi
 Abbiamo modellato l'intera realtà della piattaforma ACMESky, compresi i dettagli dei partecipanti di cui integra i servizi, in un **diagramma BPMN**: tale modellazione ha scopo documentativo, il che giustifica il suo livello di dettaglio (alcuni partecipanti esterni ad ACMESky sono presentati come *collapsed pool*).
