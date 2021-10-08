@@ -70,7 +70,7 @@
             {
               "type": "item",
               "title": "Compagnia di trasporto",
-              "uri": "reference/compagnia_trasporto.v1.yaml"
+              "uri": "reference/prenotazione_trasporto.wsdl.yaml"
             }
           ]
         }
