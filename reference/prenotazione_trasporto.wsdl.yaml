@@ -18,7 +18,16 @@ paths:
         content:
           application/xml:
             schema:
-              $ref: '#/components/schemas/dati_richiesta'
+              type: object
+              properties:
+                luoghi:
+                  $ref: '#/components/schemas/luoghi'
+                data:
+                  $ref: "#/components/schemas/data"
+                ora:
+                  $ref: "#/components/schemas/ora"
+                $ref: "#/components/schemas/sid"
+              #$ref: '#/components/schemas/dati_richiesta'
         required: true
       description: Registra un nuovo utente; prende in input solo un nome utente e una password
       responses:
