@@ -93,6 +93,15 @@
       "type": "item",
       "title": "Coreografia in BPMN",
       "uri": "docs/7-coreografiaBPMN.md"
+    },    
+    {
+      "type": "divider",
+      "title": "Conclusioni"
+    },
+    {
+      "type": "item",
+      "title": "Conclusioni e lavori futuri",
+      "uri": "docs/8-conclusioni.md"
     }
   ]
 }
