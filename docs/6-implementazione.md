@@ -39,7 +39,7 @@ L'utente può scegliere se accettare l'offerta o meno (abbiamo settato una proba
 
 Ricevuto il codice dall'utente, Acmesky ne controlla la validità - in tempo ed esistente - e crea un oggetto di tipo `Transazione` (che potrà cancellare solo alla fine) contenente i dati utili per completare il processo (indirizzo dell'utente, codice offerta, ...). 
 
-A questo punto, Acmesky richiede un link di pagamento interrogando il server dei pagamenti e lo inoltra al cliente; se il cliente effettua il pagamento con successo, questo viene notificato ad Acmesky il quale può controllare le seguenti due condizioni: 
+A questo punto, Acmesky richiede ai fornitori dei servizi bancari la generazione di un link di pagamento che quindi lo inoltra al cliente; se il cliente effettua il pagamento con successo, Acmesky ne viene messo a conoscenzan e procede col controllare le seguenti due condizioni: 
 1. il pagamento supera 1000€/$;
 2. l'utente si trova a meno di 30 km dall'aeroporto di interesse.
 

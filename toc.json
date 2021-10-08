@@ -79,6 +79,20 @@
     {
       "type": "divider",
       "title": "Implementazione"
+    },
+    {
+      "type": "item",
+      "title": "Aspetti implementativi",
+      "uri": "docs/6-implementazione.md"
+    },    
+    {
+      "type": "divider",
+      "title": "Bonus"
+    },
+    {
+      "type": "item",
+      "title": "Coreografia in BPMN",
+      "uri": "docs/7-coreografiaBPMN.md"
     }
   ]
 }
