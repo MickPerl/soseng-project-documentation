@@ -28,6 +28,35 @@ paths:
                   $ref: "#/components/schemas/ora"
                 $ref: "#/components/schemas/sid"
               #$ref: '#/components/schemas/dati_richiesta'
+            examples:
+              Esempio:
+                value: |-
+                  <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:null="null.xsd">
+                     <soapenv:Header/>
+                     <soapenv:Body>
+                        <null:richiesta>
+                           <luoghi>
+                              <arrivo>
+                                 <comune>Campomarino</comune>
+                                 <via>Via Cuoro 1</via>
+                              </arrivo>
+                              <partenza>
+                                 <comune>Termoli</comune>
+                                 <via>Via Mascolo 4</via>
+                              </partenza>
+                           </luoghi>
+                           <data>
+                              <anno>2020</anno>
+                              <giorno>12</giorno>
+                              <mese>11</mese>
+                           </data>
+                           <ora>
+                              <hh>12</hh>
+                              <mm>30</mm>
+                           </ora>
+                        </null:richiesta>
+                     </soapenv:Body>
+                  </soapenv:Envelope>
         required: true
       description: Consente di prenotare una navetta
       responses:
