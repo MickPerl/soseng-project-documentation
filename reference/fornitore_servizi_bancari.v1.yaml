@@ -23,7 +23,7 @@ paths:
         content:
           application/json:
             schema:
-              title: paymentaDataBody
+              title: paymentDataBody
               type: object
               properties:
                 card_number:
@@ -76,6 +76,7 @@ paths:
             application/json:
               schema:
                 type: object
+                title: activelink
                 properties:
                   link:
                     type: string
@@ -135,6 +136,7 @@ paths:
             application/json:
               schema:
                 type: object
+                title: PaymentRegistration
                 properties:
                   token:
                     type: string
