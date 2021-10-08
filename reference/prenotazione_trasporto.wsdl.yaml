@@ -41,8 +41,7 @@ paths:
                                  <via>Via Cuoro 1</via>
                               </arrivo>
                               <partenza>
-                                 <comune>Termoli</comune>
-                                 <via>Via Mascolo 4</via>
+                                 <aeroporto>BLQ</aeroporto>
                               </partenza>
                            </luoghi>
                            <data>
