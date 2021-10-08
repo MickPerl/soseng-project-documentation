@@ -29,7 +29,7 @@ paths:
                 $ref: "#/components/schemas/sid"
               #$ref: '#/components/schemas/dati_richiesta'
         required: true
-      description: Registra un nuovo utente; prende in input solo un nome utente e una password
+      description: Consente di prenotare una navetta
       responses:
         '200':
           description: ''
